@@ -1,0 +1,43 @@
+.barraNavegacion {
+  background-color: #fce4ec; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem 0; 
+  z-index: 10;
+}
+a.logo {
+  font-weight: 600;
+  font-size: 1.9rem; 
+  color: #333333;
+  letter-spacing: -0.5px;
+  text-decoration: none;
+}
+a.enlace {
+  color: #4a4a4a;
+  font-weight: 500;
+  font-size: 1.2rem;
+  margin: 0 1rem;
+  transition: color 0.2s ease-in-out;
+}
+a.enlace:hover {
+  color: #d81b60;
+}
+.menuDesplegable > a {
+  color: #4a4a4a;
+  font-weight: 500;
+  font-size: 1.2rem;
+  margin: 0 1rem;
+  transition: color 0.2s ease-in-out;
+}
+.menuDesplegable > a:hover {
+  color: #d81b60;
+}
+a.itemDesplegable {
+  color: #333333;
+  font-size: 1.1rem;
+  padding: 0.7rem 1.5rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+a.itemDesplegable:hover {
+  background-color: #f8f9fa;
+  color: #d81b60;
+}
