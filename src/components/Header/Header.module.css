@@ -1,0 +1,88 @@
+.barraNavegacion {
+  background-color: #fce4ec; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 1rem 0; 
+  z-index: 10;
+  position: relative;
+}
+.contenedor {
+    gap: 1rem;
+}
+.logo {
+  font-weight: 600;
+  font-size: 1.9rem; 
+  color: #333333;
+  letter-spacing: -0.5px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.logo:hover {
+    color: #d81b60;
+}
+a.enlace {
+  color: #4a4a4a;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin: 0 0.5rem;
+  transition: color 0.2s ease-in-out;
+}
+a.enlace:hover {
+  color: #d81b60;
+}
+.menuDesplegable > a {
+  color: #4a4a4a;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: color 0.2s ease-in-out;
+}
+.menuDesplegable > a:hover {
+  color: #d81b60;
+}
+.menuDesplegable :global(.dropdown-menu) {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    padding: 0.5rem 0;
+}
+.itemDesplegable {
+  color: #333333;
+  font-size: 1rem;
+  padding: 0.7rem 1.5rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+.itemDesplegable:hover {
+  background-color: #f8f9fa;
+  color: #d81b60;
+}
+
+
+@media (max-width: 991px) {
+    .barraNavegacion {
+        padding: 0.8rem 0;
+    }
+
+    .contenedor {
+        flex-wrap: wrap;
+    }
+
+    .logo {
+        font-size: 1.6rem;
+        position: static !important;
+        transform: none !important;
+        margin: 0 !important;
+    }
+
+    .enlace {
+        margin: 0.4rem 0;
+    }
+
+    .menuDesplegable > a {
+        margin: 0.4rem 0;
+    }
+}
+
+@media (max-width: 360px) {
+    .logo {
+        font-size: 1.35rem;
+    }
+}

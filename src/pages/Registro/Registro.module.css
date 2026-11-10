@@ -1,0 +1,62 @@
+.contenedorRegistro {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8d9e8, #d9e5ff);
+}
+
+.formulario {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.formulario h1 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #46345c;
+    margin-bottom: 8px;
+}
+
+.formulario > p {
+    text-align: center;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+.formulario label {
+    font-weight: 600;
+    color: #46345c;
+}
+
+.formulario button {
+    background-color: #8c65b5;
+    border: none;
+    padding: 12px;
+}
+
+.formulario button:hover {
+    background-color: #704b99;
+}
+
+.login {
+    margin-top: 25px;
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+.login a {
+    color: #8c65b5;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login a:hover {
+    text-decoration: underline;
+}
