@@ -3,44 +3,43 @@ import type { FormEvent } from "react";
 import { Link, useParams } from "react-router";
 import { useUser } from "../../context/UserContext";
 import API_URL from "../../services/api";
-import type { Post, Comment, PostImage, Tag, User } from "../../types";
+import type { Post, Comment, PostImage } from "../../types";
 import placeholderPost from "../../assets/placeholder-post.png";
 import defaultAvatar from "../../assets/default-avatar.png";
 import styles from "./DetallePost.module.css";
 
 export default function DetallePost() {
   const { id } = useParams<{ id: string }>();
-  const { user } = useUser();
+  const { user, avatarUrl } = useUser();
 
   const [post, setPost] = useState<Post | null>(null);
   const [imagenes, setImagenes] = useState<PostImage[]>([]);
   const [comentarios, setComentarios] = useState<Comment[]>([]);
-  const [usersMap, setUsersMap] = useState<Record<string, string>>({});
-  const [tagsMap, setTagsMap] = useState<Record<string, string>>({});
 
-  const [cargando, setCargando] = useState<boolean>(true);
-  const [errorCarga, setErrorCarga] = useState<string>("");
+  const [cargando, setCargando] = useState(true);
+  const [errorCarga, setErrorCarga] = useState("");
 
   // Estados del formulario controlado de comentarios
-  const [nuevoComentario, setNuevoComentario] = useState<string>("");
-  const [errorComentario, setErrorComentario] = useState<string>("");
-  const [mensajeExito, setMensajeExito] = useState<string>("");
-  const [enviando, setEnviando] = useState<boolean>(false);
+  const [nuevoComentario, setNuevoComentario] = useState("");
+  const [errorComentario, setErrorComentario] = useState("");
+  const [mensajeExito, setMensajeExito] = useState("");
+  const [enviando, setEnviando] = useState(false);
 
   useEffect(() => {
     const cargarDetalle = async () => {
-      if (!id) return;
-
+      if (!id) {
+        setErrorCarga("No se indicó una publicación.");
+        setCargando(false);
+        return;
+      }
       try {
         setCargando(true);
         setErrorCarga("");
 
-        const [resPost, resCom, resImg, resUsers, resTags] = await Promise.all([
+        const [resPost, resImg, resCom] = await Promise.all([
           fetch(`${API_URL}/posts/${id}`),
-          fetch(`${API_URL}/comments/post/${id}`),
           fetch(`${API_URL}/postimages/post/${id}`),
-          fetch(`${API_URL}/users`),
-          fetch(`${API_URL}/tags`),
+          fetch(`${API_URL}/comments/post/${id}`),
         ]);
 
         if (!resPost.ok) {
@@ -50,33 +49,12 @@ export default function DetallePost() {
         const dataPost: Post = await resPost.json();
         setPost(dataPost);
 
-        // Mapear usuarios y tags por ID por si la API devuelve solo IDs
-        if (resUsers.ok) {
-          const listaUsers: User[] = await resUsers.json();
-          const mapaU: Record<string, string> = {};
-          listaUsers.forEach((u) => {
-            const uid = u._id || u.id;
-            if (uid) mapaU[uid] = u.nickName;
-          });
-          setUsersMap(mapaU);
-        }
-
-        if (resTags.ok) {
-          const listaTags: Tag[] = await resTags.json();
-          const mapaT: Record<string, string> = {};
-          listaTags.forEach((t) => {
-            const tid = t._id || t.id;
-            if (tid) mapaT[tid] = t.nombre || t.name || tid;
-          });
-          setTagsMap(mapaT);
-        }
-
         // Cargar imágenes asociadas
         if (resImg.ok) {
           const dataImg: PostImage[] = await resImg.json();
-          setImagenes(dataImg.length > 0 ? dataImg : dataPost.images || []);
+          setImagenes(dataImg);
         } else {
-          setImagenes(dataPost.images || []);
+          setImagenes([]);
         }
 
         // Cargar comentarios visibles
@@ -84,14 +62,14 @@ export default function DetallePost() {
           const dataCom: Comment[] = await resCom.json();
           setComentarios(dataCom);
         } else {
-          setComentarios(dataPost.comentarios || dataPost.comments || []);
+          setComentarios([]);
         }
-      } catch (err) {
-        console.error(err);
+      } catch (error) {
+        console.error(error);
         setErrorCarga(
-          err instanceof Error
-            ? err.message
-            : "Ocurrió un error al cargar la publicación."
+          error instanceof Error
+            ? error.message
+            : "Ocurrió un error al cargar la publicación.",
         );
       } finally {
         setCargando(false);
@@ -100,24 +78,6 @@ export default function DetallePost() {
 
     cargarDetalle();
   }, [id]);
-
-  const obtenerNombreUsuario = (userRef?: User | string): string => {
-    if (!userRef) return "Usuario UnaHur";
-    if (typeof userRef === "object" && "nickName" in userRef) {
-      return userRef.nickName;
-    }
-    if (typeof userRef === "string") {
-      return usersMap[userRef] || "Usuario UnaHur";
-    }
-    return "Usuario UnaHur";
-  };
-
-  const obtenerNombreTag = (tag: Tag | string): string => {
-    if (typeof tag === "string") {
-      return tagsMap[tag] || tag;
-    }
-    return tag.nombre || tag.name || "tag";
-  };
 
   const handleSubmitComentario = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -138,20 +98,16 @@ export default function DetallePost() {
 
     try {
       setEnviando(true);
-      const userIdActual = user._id || user.id;
 
-      // Enviamos tanto description/content/contenido para compatibilidad total con la API
       const response = await fetch(`${API_URL}/comments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          postId: id,
-          userId: userIdActual,
           content: textoLimpio,
-          contenido: textoLimpio,
-          description: textoLimpio,
+          userId: user.id,
+          postId: Number(id),
         }),
       });
 
@@ -159,36 +115,32 @@ export default function DetallePost() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "No se pudo publicar el comentario."
+          data.message || data.error || "No se pudo publicar el comentario.",
         );
-      }
-
-      // Refrescar la lista de comentarios desde la API
-      const resComActualizados = await fetch(`${API_URL}/comments/post/${id}`);
-      if (resComActualizados.ok) {
-        const listaActualizada: Comment[] = await resComActualizados.json();
-        setComentarios(listaActualizada);
-      } else {
-        setComentarios((prev) => [
-          ...prev,
-          {
-            _id: data._id || data.id || String(Date.now()),
-            postId: id,
-            userId: user,
-            contenido: textoLimpio,
-            content: textoLimpio,
-          },
-        ]);
       }
 
       setNuevoComentario("");
       setMensajeExito("¡Comentario publicado con éxito!");
-    } catch (err) {
-      console.error(err);
+
+      //se intenta actualizar la lista
+      try {
+        const resComentarios = await fetch(`${API_URL}/comments/post/${id}`);
+
+        if (resComentarios.ok) {
+          const comentariosActualizados: Comment[] =
+            await resComentarios.json();
+          setComentarios(comentariosActualizados);
+        }
+      } catch (error) {
+        console.error("No se pudo actualizar la lista de comentarios:", error);
+      }
+    } catch (error) {
+      console.error(error);
+
       setErrorComentario(
-        err instanceof Error
-          ? err.message
-          : "Error al enviar el comentario. Intentá de nuevo."
+        error instanceof Error
+          ? error.message
+          : "Ocurrió un error al publicar el comentario. Intentá de nuevo.",
       );
     } finally {
       setEnviando(false);
@@ -217,9 +169,6 @@ export default function DetallePost() {
     );
   }
 
-  const textoDescripcion =
-    post.descripcion || post.description || "Sin descripción";
-
   return (
     <div className={`container mt-4 ${styles.contenedorDetalle}`}>
       <div className="mb-3">
@@ -232,14 +181,14 @@ export default function DetallePost() {
       <article className={`card mb-4 ${styles.tarjetaPrincipal}`}>
         {imagenes.length > 0 ? (
           <div className={styles.galeriaImagenes}>
-            {imagenes.map((img, idx) => (
+            {imagenes.map((imagen) => (
               <img
-                key={img._id || img.id || idx}
-                src={img.url}
-                alt={`Imagen ${idx + 1} del post`}
+                key={imagen.id}
+                src={imagen.url}
+                alt={`Imagen del post`}
                 className={styles.imagenDetalle}
-                onError={(e) => {
-                  e.currentTarget.src = placeholderPost;
+                onError={(event) => {
+                  event.currentTarget.src = placeholderPost;
                 }}
               />
             ))}
@@ -248,7 +197,7 @@ export default function DetallePost() {
           <div className={styles.galeriaImagenes}>
             <img
               src={placeholderPost}
-              alt="Sin imagen adjunta"
+              alt="Publicación sin imágenes"
               className={styles.imagenDetalle}
             />
           </div>
@@ -257,31 +206,40 @@ export default function DetallePost() {
         <div className="card-body p-4">
           <div className="d-flex align-items-center gap-2 mb-3">
             <img
-              src={defaultAvatar}
-              alt="Avatar autor"
+              src={
+                Number(
+                  localStorage.getItem("user")
+                    ? JSON.parse(localStorage.getItem("user")!).id ===
+                        post.UserId
+                    : false,
+                )
+                  ? avatarUrl || defaultAvatar
+                  : localStorage.getItem(`avatar-${post.UserId}`) ||
+                    defaultAvatar
+              }
+              alt="Avatar del autor"
               className={styles.avatar}
-              onError={(e) => (e.currentTarget.style.display = "none")}
+              onError={(event) => {
+                event.currentTarget.src = defaultAvatar;
+              }}
             />
             <div>
-              <h2 className="h6 m-0 fw-bold">
-                @{obtenerNombreUsuario(post.userId)}
-              </h2>
-              {post.createdAt && (
-                <small className="text-muted">
-                  {new Date(post.createdAt).toLocaleDateString()}
-                </small>
-              )}
+              <h2 className="h6 m-0 fw-bold">@{post.User.nickName}</h2>
+
+              <small className="text-muted">
+                {new Date(post.createdAt).toLocaleDateString()}
+              </small>
             </div>
           </div>
 
-          <p className="fs-5 mb-3">{textoDescripcion}</p>
+          <p className="fs-5 mb-3">{post.description}</p>
 
           {/* Etiquetas */}
-          {post.tags && post.tags.length > 0 && (
+          {post.Tags.length > 0 && (
             <div className="d-flex flex-wrap gap-2">
-              {post.tags.map((tag, idx) => (
-                <span key={idx} className="badge bg-secondary">
-                  #{obtenerNombreTag(tag)}
+              {post.Tags.map((tag) => (
+                <span key={tag.id} className="badge bg-secondary">
+                  #{tag.name}
                 </span>
               ))}
             </div>
@@ -291,10 +249,7 @@ export default function DetallePost() {
 
       {/* Sección de Comentarios */}
       <section className="mb-4">
-        <h3 className="h5 fw-bold mb-3">
-          Comentarios visibles ({comentarios.length})
-        </h3>
-
+        <h3 className="h5 fw-bold mb-3">Comentarios ({comentarios.length})</h3>
         {comentarios.length === 0 ? (
           <div className="alert alert-light border text-muted">
             Todavía no hay comentarios en esta publicación. ¡Sé el primero en
@@ -302,34 +257,36 @@ export default function DetallePost() {
           </div>
         ) : (
           <div className="d-flex flex-column gap-3 mb-4">
-            {comentarios.map((com, idx) => {
-              const textoComentario =
-                com.contenido ||
-                com.content ||
-                com.text ||
-                (com as unknown as { description?: string }).description ||
-                "";
+            {comentarios.map((comentario) => (
+              <div
+                key={comentario.id}
+                className={`card p-3 mb-3 ${styles.tarjetaComentario}`}
+              >
+                <div className="d-flex align-items-center gap-2 mb-2">
+                  <img
+                    src={
+                      comentario.UserId === user?.id
+                        ? avatarUrl || defaultAvatar
+                        : localStorage.getItem(`avatar-${comentario.UserId}`) ||
+                          defaultAvatar
+                    }
+                    alt="Avatar del usuario"
+                    className={styles.avatarComentario}
+                    onError={(event) => {
+                      event.currentTarget.src = defaultAvatar;
+                    }}
+                  />
 
-              return (
-                <div
-                  key={com._id || com.id || idx}
-                  className={`p-3 ${styles.tarjetaComentario}`}
-                >
-                  <div className="d-flex align-items-center gap-2 mb-2">
-                    <img
-                      src={defaultAvatar}
-                      alt="Avatar"
-                      className={styles.avatarComentario}
-                      onError={(e) => (e.currentTarget.style.display = "none")}
-                    />
-                    <strong className="small">
-                      @{obtenerNombreUsuario(com.userId)}
-                    </strong>
-                  </div>
-                  <p className="mb-0 text-dark">{textoComentario}</p>
+                  <strong className="small">@{comentario.User.nickName}</strong>
                 </div>
-              );
-            })}
+
+                <p className="mb-1 text-dark">{comentario.content}</p>
+
+                <small className="text-muted">
+                  {new Date(comentario.createdAt).toLocaleDateString()}
+                </small>
+              </div>
+            ))}
           </div>
         )}
       </section>
@@ -340,7 +297,10 @@ export default function DetallePost() {
 
         <form onSubmit={handleSubmitComentario} noValidate>
           <div className="mb-3">
-            <label htmlFor="nuevoComentario" className="form-label visually-hidden">
+            <label
+              htmlFor="nuevoComentario"
+              className="form-label visually-hidden"
+            >
               Escribí tu comentario
             </label>
             <textarea
@@ -350,13 +310,12 @@ export default function DetallePost() {
               className={`form-control ${errorComentario ? "is-invalid" : ""}`}
               placeholder="Escribí tu comentario acá..."
               value={nuevoComentario}
-              onChange={(e) => {
-                setNuevoComentario(e.target.value);
+              onChange={(event) => {
+                setNuevoComentario(event.target.value);
                 setErrorComentario("");
                 setMensajeExito("");
               }}
               disabled={enviando}
-              required
             />
           </div>
 
@@ -372,11 +331,7 @@ export default function DetallePost() {
             </div>
           )}
 
-          <button
-            type="submit"
-            className="btn btn-dark"
-            disabled={enviando}
-          >
+          <button type="submit" className="btn btn-dark" disabled={enviando}>
             {enviando ? "Publicando..." : "Publicar comentario"}
           </button>
         </form>

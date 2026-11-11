@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import API_URL from "../../services/api";
 import type { Post, Tag, PostImage, Comment } from "../../types";
+import PostCard from "../../components/PostCard/PostCard";
 import heroImg from "../../assets/hero.png";
-import placeholderPost from "../../assets/placeholder-post.png";
-import defaultAvatar from "../../assets/default-avatar.png";
 import styles from "./Home.module.css";
 
 interface PostEnriquecido extends Post {
@@ -36,35 +35,37 @@ export default function Home() {
 
         const dataPosts: Post[] = await resPosts.json();
         const dataTags: Tag[] = resTags.ok ? await resTags.json() : [];
+
         setTags(dataTags);
 
-        // Enriquecer cada post con sus imágenes y cantidad de comentarios visibles
+        // Cargar imágenes y comentarios de cada publicación
         const postsCompletos = await Promise.all(
           dataPosts.map(async (post) => {
-            const postId = post._id || post.id || "";
+            const postId = post.id;
 
-            let imagenesCargadas: PostImage[] = post.images || [];
-            if (imagenesCargadas.length === 0 && postId) {
-              try {
-                const resImg = await fetch(`${API_URL}/postimages/post/${postId}`);
-                if (resImg.ok) {
-                  imagenesCargadas = await resImg.json();
-                }
-              } catch {
-                imagenesCargadas = [];
+            let imagenesCargadas: PostImage[] = [];
+            let listaComentarios: Comment[] = [];
+
+            try {
+              const resImg = await fetch(
+                `${API_URL}/postimages/post/${postId}`,
+              );
+
+              if (resImg.ok) {
+                imagenesCargadas = await resImg.json();
               }
+            } catch {
+              imagenesCargadas = [];
             }
 
-            let listaComentarios: Comment[] = post.comentarios || post.comments || [];
-            if (listaComentarios.length === 0 && postId) {
-              try {
-                const resCom = await fetch(`${API_URL}/comments/post/${postId}`);
-                if (resCom.ok) {
-                  listaComentarios = await resCom.json();
-                }
-              } catch {
-                listaComentarios = [];
+            try {
+              const resCom = await fetch(`${API_URL}/comments/post/${postId}`);
+
+              if (resCom.ok) {
+                listaComentarios = await resCom.json();
               }
+            } catch {
+              listaComentarios = [];
             }
 
             return {
@@ -72,7 +73,7 @@ export default function Home() {
               imagenesCargadas,
               cantidadComentarios: listaComentarios.length,
             };
-          })
+          }),
         );
 
         setPosts(postsCompletos);
@@ -87,24 +88,10 @@ export default function Home() {
     cargarDatos();
   }, []);
 
-  const obtenerNombreTag = (tag: Tag | string): string => {
-    if (typeof tag === "string") {
-      const encontrado = tags.find((t) => (t._id || t.id) === tag);
-      return encontrado ? encontrado.nombre || encontrado.name || tag : tag;
-    }
-    return tag.nombre || tag.name || " etiqueta";
-  };
-
-  const obtenerAutor = (post: Post): string => {
-    if (post.userId && typeof post.userId === "object" && "nickName" in post.userId) {
-      return post.userId.nickName;
-    }
-    return "Usuario UnaHur";
-  };
-
+  // Filtrar publicaciones por etiqueta
   const postsFiltrados = tagSeleccionado
     ? posts.filter((post) =>
-        post.tags?.some((t) => obtenerNombreTag(t) === tagSeleccionado)
+        post.Tags.some((tag) => tag.name === tagSeleccionado),
       )
     : posts;
 
@@ -117,17 +104,21 @@ export default function Home() {
             <span className="badge bg-light text-dark mb-2">
               UnaHur Anti-Social Net
             </span>
+
             <h1 className="display-6 fw-bold">
               Conectá sin algoritmos ni distracciones
             </h1>
+
             <p className="lead mb-3">
               "Menos ruido, más código y mejores ideas." El espacio de la
               comunidad donde compartimos lo que realmente importa.
             </p>
+
             <Link to="/crear-post" className="btn btn-light fw-semibold">
               + Crear nueva publicación
             </Link>
           </div>
+
           <div className="col-md-5 text-center">
             <img
               src={heroImg}
@@ -140,12 +131,12 @@ export default function Home() {
       </section>
 
       <div className="row g-4">
-        {/* Columna Principal: Feed de Publicaciones */}
+        {/* Columna principal: publicaciones */}
         <div className="col-lg-8">
           <div className="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
             <h2 className="h4 m-0 fw-bold">Publicaciones recientes</h2>
 
-            {/* Bonus: Filtro por etiquetas */}
+            {/* Filtro por etiquetas */}
             {tags.length > 0 && (
               <div className="d-flex flex-wrap gap-1 align-items-center">
                 <button
@@ -157,27 +148,26 @@ export default function Home() {
                 >
                   Todas
                 </button>
-                {tags.map((tag) => {
-                  const nombre = tag.nombre || tag.name || "";
-                  return (
-                    <button
-                      key={tag._id || tag.id || nombre}
-                      type="button"
-                      className={`btn btn-sm ${
-                        tagSeleccionado === nombre
-                          ? "btn-dark"
-                          : "btn-outline-secondary"
-                      }`}
-                      onClick={() => setTagSeleccionado(nombre)}
-                    >
-                      #{nombre}
-                    </button>
-                  );
-                })}
+
+                {tags.map((tag) => (
+                  <button
+                    key={tag.id}
+                    type="button"
+                    className={`btn btn-sm ${
+                      tagSeleccionado === tag.name
+                        ? "btn-dark"
+                        : "btn-outline-secondary"
+                    }`}
+                    onClick={() => setTagSeleccionado(tag.name)}
+                  >
+                    #{tag.name}
+                  </button>
+                ))}
               </div>
             )}
           </div>
 
+          {/* Cargando */}
           {cargando && (
             <div className="text-center py-5">
               <div className="spinner-border text-dark" role="status" />
@@ -185,114 +175,57 @@ export default function Home() {
             </div>
           )}
 
+          {/* Error */}
           {error && (
             <div className="alert alert-danger" role="alert">
               {error}
             </div>
           )}
 
+          {/* Sin publicaciones */}
           {!cargando && !error && postsFiltrados.length === 0 && (
             <div className="alert alert-secondary text-center py-4">
               No hay publicaciones para mostrar en este momento.
             </div>
           )}
 
+          {/* Tarjetas de publicaciones */}
           <div className="row g-4">
-            {postsFiltrados.map((post) => {
-              const postId = post._id || post.id;
-              const textoDescripcion =
-                post.descripcion || post.description || "Sin descripción";
-              const primeraImagen =
-                post.imagenesCargadas[0]?.url || placeholderPost;
-
-              return (
-                <div className="col-md-6" key={postId}>
-                  <div className={`card h-100 ${styles.tarjetaPost}`}>
-                    <img
-                      src={primeraImagen}
-                      alt="Imagen de la publicación"
-                      className={styles.imagenPost}
-                      onError={(e) => {
-                        e.currentTarget.src = placeholderPost;
-                      }}
-                    />
-
-                    <div className="card-body d-flex flex-column">
-                      <div className="d-flex align-items-center gap-2 mb-2">
-                        <img
-                          src={defaultAvatar}
-                          alt="Avatar"
-                          className={styles.avatarAutor}
-                          onError={(e) =>
-                            (e.currentTarget.style.display = "none")
-                          }
-                        />
-                        <small className="text-muted fw-semibold">
-                          @{obtenerAutor(post)}
-                        </small>
-                      </div>
-
-                      <p className="card-text flex-grow-1">{textoDescripcion}</p>
-
-                      {/* Etiquetas del post */}
-                      {post.tags && post.tags.length > 0 && (
-                        <div className="mb-3 d-flex flex-wrap gap-1">
-                          {post.tags.map((tag, idx) => {
-                            const nombreTag = obtenerNombreTag(tag);
-                            return (
-                              <span
-                                key={idx}
-                                className={`badge bg-secondary ${styles.badgeTag}`}
-                                onClick={() => setTagSeleccionado(nombreTag)}
-                              >
-                                #{nombreTag}
-                              </span>
-                            );
-                          })}
-                        </div>
-                      )}
-
-                      <div className="d-flex justify-content-between align-items-center pt-2 border-top">
-                        <small className="text-muted">
-                          💬 {post.cantidadComentarios}{" "}
-                          {post.cantidadComentarios === 1
-                            ? "comentario"
-                            : "comentarios"}
-                        </small>
-
-                        <Link
-                          to={`/post/${postId}`}
-                          className="btn btn-sm btn-dark"
-                        >
-                          Ver más
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
+            {!cargando &&
+              !error &&
+              postsFiltrados.map((post) => (
+                <div className="col-md-6" key={post.id}>
+                  <PostCard
+                    post={post}
+                    cantidadComentarios={post.cantidadComentarios}
+                    imagen={post.imagenesCargadas[0]?.url}
+                  />
                 </div>
-              );
-            })}
+              ))}
           </div>
         </div>
 
-        {/* Columna Lateral: Sobre Nosotros, Slogans y Datos Curiosos */}
+        {/* Columna lateral */}
         <div className="col-lg-4">
           <div className={`card p-4 mb-4 ${styles.tarjetaLateral}`}>
             <h3 className="h5 fw-bold mb-2">Sobre nosotros</h3>
+
             <p className="text-muted mb-0">
-              <strong>UnaHur Anti-Social Net</strong> nació como un
-              proyecto de Construcción de Interfaces de Usuario. Buscamos
-              volver a las raíces de internet: compartir ideas, proyectos y
-              debates entre estudiantes sin publicidad invasiva.
+              <strong>UnaHur Anti-Social Net</strong> nació como un proyecto de
+              Construcción de Interfaces de Usuario. Buscamos volver a las
+              raíces de internet: compartir ideas, proyectos y debates entre
+              estudiantes sin publicidad invasiva.
             </p>
           </div>
 
           <div className={`card p-4 mb-4 ${styles.tarjetaLateral}`}>
             <h3 className="h5 fw-bold mb-3">Frases destacadas</h3>
+
             <blockquote className="blockquote fs-6 mb-3">
               "Primero resolvé el problema. Después, escribí el código."
               <footer className="blockquote-footer mt-1">John Johnson</footer>
             </blockquote>
+
             <blockquote className="blockquote fs-6 mb-0">
               "El código es como el humor. Cuando tenés que explicarlo, es
               malo."
@@ -302,15 +235,18 @@ export default function Home() {
 
           <div className={`card p-4 ${styles.tarjetaLateral}`}>
             <h3 className="h5 fw-bold mb-2">¿Sabías que...? 💡</h3>
+
             <ul className="text-muted ps-3 mb-0">
               <li className="mb-2">
                 El primer sitio web de la historia sigue online y fue creado por
                 Tim Berners-Lee en 1991.
               </li>
+
               <li className="mb-2">
                 TypeScript fue lanzado públicamente por Microsoft en octubre de
                 2012 tras dos años de desarrollo interno.
               </li>
+
               <li>
                 Las Single Page Applications (SPA) recargan únicamente los datos
                 necesarios mediante JSON sin refrescar todo el navegador.

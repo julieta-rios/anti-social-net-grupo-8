@@ -2,6 +2,8 @@ import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router";
 import API_URL from "../../services/api";
+import { validate } from "../../utils/validacionesRegistro";
+import type { ErroresRegistro } from "../../utils/validacionesRegistro";
 import logo from "../../assets/logo.png";
 import styles from "./Registro.module.css";
 
@@ -12,7 +14,8 @@ const datosIniciales = {
 
 export default function Registro() {
   const [formData, setFormData] = useState(datosIniciales);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<ErroresRegistro>({});
+  const [errorServidor, setErrorServidor] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [procesando, setProcesando] = useState(false);
 
@@ -26,26 +29,25 @@ export default function Registro() {
       [name]: value,
     }));
 
-    setError("");
+    setErrors((previo) => ({
+      ...previo,
+      [name]: undefined,
+    }));
+
+    setErrorServidor("");
     setMensaje("");
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    setError("");
+    setErrorServidor("");
     setMensaje("");
 
-    const nickName = formData.nickName.trim();
-    const email = formData.email.trim();
+    const nuevosErrores = validate(formData);
+    setErrors(nuevosErrores);
 
-    if (!nickName || !email) {
-      setError("Todos los campos son obligatorios");
-      return;
-    }
-
-    if (nickName.length < 3 || nickName.length > 15) {
-      setError("El nickname debe tener entre 3 y 15 caracteres");
+    if (Object.keys(nuevosErrores).length > 0) {
       return;
     }
 
@@ -57,13 +59,18 @@ export default function Registro() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nickName, email }),
+        body: JSON.stringify({
+          nickName: formData.nickName.trim(),
+          email: formData.email.trim(),
+        }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || data.error || "No se pudo crear el usuario");
+        throw new Error(
+          data.message || data.error || "No se pudo crear el usuario",
+        );
       }
 
       setMensaje("¡Tu cuenta fue creada correctamente!");
@@ -75,10 +82,10 @@ export default function Registro() {
     } catch (error) {
       console.error(error);
 
-      setError(
+      setErrorServidor(
         error instanceof Error
           ? error.message
-          : "Ocurrió un error al registrarse"
+          : "Ocurrió un error al registrarse",
       );
     } finally {
       setProcesando(false);
@@ -93,7 +100,6 @@ export default function Registro() {
             src={logo}
             alt="UnaHur Anti-Social Net"
             style={{ maxHeight: "65px", width: "auto" }}
-            onError={(e) => (e.currentTarget.style.display = "none")}
           />
         </div>
 
@@ -109,13 +115,16 @@ export default function Registro() {
             type="text"
             id="nickName"
             name="nickName"
-            className={`form-control ${error ? "is-invalid" : ""}`}
+            className={`form-control ${errors.nickName ? "is-invalid" : ""}`}
             value={formData.nickName}
             onChange={handleChange}
             placeholder="Elegí tu nickName"
             disabled={procesando}
             required
           />
+          {errors.nickName && (
+            <div className="invalid-feedback">{errors.nickName}</div>
+          )}
         </div>
 
         <div className="mb-3">
@@ -127,18 +136,22 @@ export default function Registro() {
             type="email"
             id="email"
             name="email"
-            className={`form-control ${error ? "is-invalid" : ""}`}
+            className={`form-control ${errors.email ? "is-invalid" : ""}`}
             value={formData.email}
             onChange={handleChange}
             placeholder="ejemplo@correo.com"
             disabled={procesando}
             required
           />
+
+          {errors.email && (
+            <div className="invalid-feedback">{errors.email}</div>
+          )}
         </div>
 
-        {error && (
+        {errorServidor && (
           <div className="alert alert-danger" role="alert">
-            {error}
+            {errorServidor}
           </div>
         )}
 

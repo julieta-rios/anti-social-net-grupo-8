@@ -57,7 +57,7 @@ export default function Login() {
       const usuarioEncontrado = users.find(
         (user) =>
           user.nickName.toLowerCase() ===
-          formData.nickName.trim().toLowerCase()
+          formData.nickName.trim().toLowerCase(),
       );
 
       if (!usuarioEncontrado) {

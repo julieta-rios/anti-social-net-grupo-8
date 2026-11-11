@@ -18,10 +18,10 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/post/:id" element={<DetallePost />} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/post/:id" element={<DetallePost />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/crear-post" element={<CrearPost />} />
         </Route>
