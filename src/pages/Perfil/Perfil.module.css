@@ -1,0 +1,31 @@
+.contenedorPerfil {
+  max-width: 900px;
+  padding-bottom: 3rem;
+}
+
+.tarjetaPerfil {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  background: linear-gradient(135deg, #2b1055 0%, #7597de 100%);
+  color: #ffffff;
+}
+
+.avatarPerfil {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ffffff;
+}
+
+.tarjetaPost {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease;
+}
+
+.tarjetaPost:hover {
+  transform: translateY(-3px);
+}
