@@ -3,19 +3,19 @@ import type { Post } from "../../types";
 import placeholderPost from "../../assets/placeholder-post.png";
 import styles from "./PostCard.module.css";
 
-interface TarjetaPostProps {
+interface PostCardProps {
   post: Post;
   cantidadComentarios: number;
   imagen?: string;
 }
 
-export default function TarjetaPost({
+export default function PostCard({
   post,
   cantidadComentarios,
   imagen,
-}: TarjetaPostProps) {
+}: PostCardProps) {
   return (
-    <article className={`card h-100 ${styles.tarjetaPost}`}>
+    <article className={`card h-100 ${styles.postCard}`}>
       <img
         src={imagen || placeholderPost}
         alt="Imagen de la publicación"
