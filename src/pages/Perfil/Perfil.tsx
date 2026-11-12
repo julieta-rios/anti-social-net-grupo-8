@@ -1,5 +1,5 @@
+
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
 import { useUser } from "../../context/UserContext";
 import API_URL from "../../services/api";
 import type { Post, Comment, PostImage } from "../../types";
@@ -7,15 +7,19 @@ import PostCard from "../../components/PostCard/PostCard";
 import defaultAvatar from "../../assets/default-avatar.png";
 import styles from "./Perfil.module.css";
 
-
 interface PostConComentarios extends Post {
   cantidadComentarios: number;
   imagen?: string;
 }
 
 export default function Perfil() {
-  const { user, logout, avatarUrl, actualizarAvatar } = useUser();
-  const navigate = useNavigate();
+  const {
+    user,
+    avatarUrl,
+    actualizarAvatar,
+    nombreMostrar,
+    actualizarNombre,
+  } = useUser();
 
   const [misPosts, setMisPosts] = useState<PostConComentarios[]>([]);
   const [cargando, setCargando] = useState(true);
@@ -23,8 +27,12 @@ export default function Perfil() {
   const [errorAvatar, setErrorAvatar] = useState("");
 
   const [urlAvatar, setUrlAvatar] = useState(avatarUrl);
+  const [nombreBorrador, setNombreBorrador] = useState(nombreMostrar);
   const [mostrarEditor, setMostrarEditor] = useState(false);
+
   const userId = user?.id;
+
+  const nombrePerfil = nombreMostrar.trim() || user?.nickName || "Usuario";
 
   useEffect(() => {
     const cargarMisPosts = async () => {
@@ -66,7 +74,10 @@ export default function Perfil() {
                 imagen = imagenes[0]?.url;
               }
             } catch (error) {
-              console.error("Error al cargar datos de la publicación:", error);
+              console.error(
+                "Error al cargar datos de la publicación:",
+                error
+              );
             }
 
             return {
@@ -74,7 +85,7 @@ export default function Perfil() {
               cantidadComentarios,
               imagen,
             };
-          }),
+          })
         );
 
         setMisPosts(postsEnriquecidos);
@@ -93,8 +104,27 @@ export default function Perfil() {
     setUrlAvatar(avatarUrl);
   }, [avatarUrl]);
 
-  const handleGuardarAvatar = () => {
+  useEffect(() => {
+    setNombreBorrador(nombreMostrar);
+  }, [nombreMostrar]);
+
+  const abrirEditor = () => {
+    setUrlAvatar(avatarUrl);
+    setNombreBorrador(nombreMostrar);
+    setErrorAvatar("");
+    setMostrarEditor(true);
+  };
+
+  const cerrarEditor = () => {
+    setUrlAvatar(avatarUrl);
+    setNombreBorrador(nombreMostrar);
+    setErrorAvatar("");
+    setMostrarEditor(false);
+  };
+
+  const handleGuardarPerfil = () => {
     const url = urlAvatar.trim();
+    const nombre = nombreBorrador.trim();
 
     if (url) {
       try {
@@ -103,83 +133,95 @@ export default function Perfil() {
         if (!["http:", "https:"].includes(urlValidada.protocol)) {
           throw new Error();
         }
-        actualizarAvatar(url);
-        setErrorAvatar("");
-        setMostrarEditor(false);
-        
       } catch {
         setErrorAvatar("Ingresá una URL de imagen válida.");
         return;
       }
     }
 
+    actualizarAvatar(url);
+    actualizarNombre(nombre);
+    setErrorAvatar("");
+    setMostrarEditor(false);
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
+  const totalComentarios = misPosts.reduce(
+    (total, post) => total + post.cantidadComentarios,
+    0
+  );
 
   return (
-    <div className={`container mt-4 ${styles.contenedorPerfil}`}>
-      <div className={`card p-4 mb-4 ${styles.tarjetaPerfil}`}>
-        <div className="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
-          <div className="d-flex align-items-center gap-3 text-center text-md-start">
-            <img
-              src={avatarUrl || defaultAvatar}
-              alt="Avatar de perfil"
-              className={styles.avatarPerfil}
-            />
+    <main className={`container ${styles.contenedorPerfil}`}>
+      <section className={styles.tarjetaPerfil}>
+        <div className={styles.portadaPerfil}>
+          <span className={styles.detallePortada}>TU ESPACIO</span>
+          <span className={styles.decoracionPortada}>✦</span>
+        </div>
 
-            <div>
-              <h1 className="h3 fw-bold mb-1">@{user?.nickName}</h1>
-              <p className="mb-0 opacity-75">
-                Miembro de UnaHur Anti-Social Net
-              </p>
+        <div className={styles.informacionPerfil}>
+          <div className={styles.encabezadoPerfil}>
+            <div className={styles.identidadPerfil}>
+              <img
+                src={avatarUrl || defaultAvatar}
+                alt="Avatar de perfil"
+                className={styles.avatarPerfil}
+                onError={(event) => {
+                  event.currentTarget.src = defaultAvatar;
+                }}
+              />
+
+              <div className={styles.datosUsuario}>
+                <h1>{nombrePerfil}</h1>
+                <p>@{user?.nickName}</p>
+              </div>
             </div>
-          </div>
-
-          <div className="d-flex flex-wrap gap-2">
-            <button type="button" className={styles.botonEditar} onClick={() => setMostrarEditor(true)}>
-              <i className="bi bi-pencil-square me-1"></i>
-              Editar Perfil
-            </button>
-            
-            <Link to="/crear-post" className="btn btn-light fw-semibold">
-              + Crear publicación
-            </Link>
 
             <button
               type="button"
-              className="btn btn-light fw-semibold"
-              onClick={handleLogout}
+              className={styles.botonEditar}
+              onClick={abrirEditor}
             >
-              Cerrar sesión
+              <span aria-hidden="true">✎</span> Editar perfil
             </button>
           </div>
+
+          <p className={styles.descripcionPerfil}>
+            Un espacio para compartir ideas, intereses y experiencias.
+          </p>
+
+          <div className={styles.estadisticasPerfil}>
+            <div>
+              <strong>{misPosts.length}</strong>
+              <span>Publicaciones</span>
+            </div>
+
+            <div>
+              <strong>{totalComentarios}</strong>
+              <span>Comentarios</span>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className={styles.cambiarAvatar}>
-        <label htmlFor="avatar" className="form-label small fw-semibold mb-2">
-          Cambiar foto de perfil
-        </label>
-
-        {mostrarEditor && (
-          <div className={styles.modalOverlay}>
-            <div
-              className={styles.modalEditar}
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="tituloEditarPerfil"
-            >
+      {mostrarEditor && (
+        <div
+          className={styles.modalOverlay}
+          onClick={cerrarEditor}
+        >
+          <div
+            className={styles.modalEditar}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="tituloEditarPerfil"
+            onClick={(event) => event.stopPropagation()}
+          >
             <div className={styles.modalHeader}>
               <h2 id="tituloEditarPerfil">Editar perfil</h2>
 
               <button
                 type="button"
                 className={styles.botonCerrar}
-                onClick={() => setMostrarEditor(false)}
+                onClick={cerrarEditor}
                 aria-label="Cerrar"
               >
                 &times;
@@ -187,77 +229,117 @@ export default function Perfil() {
             </div>
 
             <div className={styles.modalContenido}>
-              <div className="text-center mb-3">
+              <div className={styles.vistaPrevia}>
                 <img
                   src={urlAvatar || defaultAvatar}
                   alt="Vista previa del avatar"
                   className={styles.avatarPreview}
+                  onError={(event) => {
+                    event.currentTarget.src = defaultAvatar;
+                  }}
                 />
-                <p className="fw-semibold mt-2 mb-0">
-                  @{user?.nickName}
-                </p>
+
+                <strong>
+                  {nombreBorrador.trim() || user?.nickName}
+                </strong>
+
+                <span>@{user?.nickName}</span>
+              </div>
+
+              <div className="mb-3">
+                <label
+                  htmlFor="nombreMostrar"
+                  className="form-label fw-semibold"
+                >
+                  Nombre para mostrar
+                </label>
+
+                <input
+                  id="nombreMostrar"
+                  type="text"
+                  className="form-control"
+                  placeholder="¿Cómo querés que te llamen?"
+                  maxLength={40}
+                  value={nombreBorrador}
+                  onChange={(event) =>
+                    setNombreBorrador(event.target.value)
+                  }
+                />
+
                 <small className="text-muted">
-                  Vista previa de tu perfil
+                  Este nombre se mostrará en tu perfil. Tu usuario seguirá
+                  siendo @{user?.nickName}.
                 </small>
               </div>
 
-              <label
-                htmlFor="avatar"
-                className="form-label fw-semibold"
-              >
-                Foto de perfil
-              </label>
+              <div>
+                <label
+                  htmlFor="avatar"
+                  className="form-label fw-semibold"
+                >
+                  Foto de perfil
+                </label>
 
-              <input
-                id="avatar"
-                type="url"
-                className="form-control"
-                placeholder="Pegá la URL de tu imagen"
-                value={urlAvatar}
-                onChange={(event) => {
-                  setUrlAvatar(event.target.value);
-                  setErrorAvatar("");
-                }}
-              />
+                <input
+                  id="avatar"
+                  type="url"
+                  className="form-control"
+                  placeholder="Pegá la URL de tu imagen"
+                  value={urlAvatar}
+                  onChange={(event) => {
+                    setUrlAvatar(event.target.value);
+                    setErrorAvatar("");
+                  }}
+                />
 
-              {errorAvatar && (
-                <small className="text-danger d-block mt-2">
-                  {errorAvatar}
+                <small className="text-muted">
+                  Podés dejarlo vacío para volver al avatar predeterminado.
                 </small>
-              )}
+
+                {errorAvatar && (
+                  <small className="text-danger d-block mt-2">
+                    {errorAvatar}
+                  </small>
+                )}
+              </div>
             </div>
 
-      <div className={styles.modalFooter}>
-        <button
-          type="button"
-          className={styles.botonCancelar}
-          onClick={() => setMostrarEditor(false)}
-        >
-          Cancelar
-        </button>
+            <div className={styles.modalFooter}>
+              <button
+                type="button"
+                className={styles.botonCancelar}
+                onClick={cerrarEditor}
+              >
+                Cancelar
+              </button>
 
-        <button
-          type="button"
-          className={styles.botonGuardar}
-          onClick={handleGuardarAvatar}
-        >
-          Guardar cambios
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+              <button
+                type="button"
+                className={styles.botonGuardar}
+                onClick={handleGuardarPerfil}
+              >
+                Guardar cambios
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-        {errorAvatar && <small className="text-warning">{errorAvatar}</small>}
-      </div>
-
-      <section>
-        <h2 className="h4 fw-bold mb-3">Mis publicaciones</h2>
+      <section className={styles.seccionPublicaciones}>
+        <div className={styles.tituloPublicaciones}>
+          <div>
+            <span>MÁS DE VOS</span>
+            <h2>Mis publicaciones</h2>
+          </div>
+          <span className={styles.contadorPosts}>
+            {misPosts.length} {misPosts.length === 1 ? "post" : "posts"}
+          </span>
+        </div>
 
         {cargando && (
-          <div className="text-center py-5">
-            <div className="spinner-border text-dark" role="status" />
-            <p className="mt-2 text-muted">Cargando tus posteos...</p>
+          <div className={styles.estadoVacio}>
+            <div className="spinner-border" role="status" />
+            <p>Cargando tus publicaciones...</p>
           </div>
         )}
 
@@ -268,17 +350,20 @@ export default function Perfil() {
         )}
 
         {!cargando && !error && misPosts.length === 0 && (
-          <div className="alert alert-secondary text-center py-4">
-            Todavía no realizaste ninguna publicación. ¡Animate a compartir tu
-            primer post!
+          <div className={styles.estadoVacio}>
+            <span className={styles.iconoVacio}>✧</span>
+            <h3>Tu espacio está esperando</h3>
+            <p>
+              Todavía no realizaste ninguna publicación. ¡Animate a compartir
+              algo con la comunidad!
+            </p>
           </div>
         )}
 
-        <div className="row g-3">
-          {!cargando &&
-            !error &&
-            misPosts.map((post) => (
-              <div className="col-md-6" key={post.id}>
+        {!cargando && !error && misPosts.length > 0 && (
+          <div className={styles.listaPublicaciones}>
+            {misPosts.map((post) => (
+              <div className={styles.publicacion} key={post.id}>
                 <PostCard
                   post={post}
                   cantidadComentarios={post.cantidadComentarios}
@@ -286,8 +371,9 @@ export default function Perfil() {
                 />
               </div>
             ))}
-        </div>
+          </div>
+        )}
       </section>
-    </div>
+    </main>
   );
 }

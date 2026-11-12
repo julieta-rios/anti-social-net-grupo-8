@@ -1,114 +1,295 @@
-.tarjetaPost {
-  border: none;
-  border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease;
+
+/* CONTENEDOR GENERAL */
+
+.contenedorPerfil {
+  max-width: 900px;
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+  color: #35243b;
 }
 
-.tarjetaPost:hover {
-  transform: translateY(-3px);
-}
+/* TARJETA PRINCIPAL DEL PERFIL */
 
 .tarjetaPerfil {
-  border: none;
-  border-radius: 1rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  background: linear-gradient(135deg, #2b1055 0%, #7597de 100%);
-  color: #fff;
+  background-color: #fff;
+  border: 1px solid #f0e3ec;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 5px 22px rgba(80, 35, 75, 0.07);
+}
+
+/* PORTADA DECORATIVA */
+
+.portadaPerfil {
+  height: 145px;
+  background: linear-gradient(120deg, #f4b9d0 0%, #d9b9e9 55%, #b9b9ec 100%);
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 1.25rem;
+  overflow: hidden;
+}
+
+.portadaPerfil::before,
+.portadaPerfil::after {
+  content: "";
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+}
+
+.portadaPerfil::before {
+  width: 190px;
+  height: 190px;
+  top: -100px;
+  left: 15%;
+}
+
+.portadaPerfil::after {
+  width: 240px;
+  height: 240px;
+  bottom: -180px;
+  right: 10%;
+}
+
+.detallePortada {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15rem;
+  z-index: 1;
+}
+
+.decoracionPortada {
+  position: absolute;
+  left: 45%;
+  top: 20px;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 3rem;
+}
+
+/* INFORMACIÓN DEL USUARIO */
+
+.informacionPerfil {
+  padding: 0 2rem 1.75rem;
+}
+
+.encabezadoPerfil {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: -48px;
+  position: relative;
+}
+
+.identidadPerfil {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  min-width: 0;
 }
 
 .avatarPerfil {
-  width: 100px;
-  height: 100px;
-  min-width: 100px;
+  width: 112px;
+  height: 112px;
+  min-width: 112px;
   border-radius: 50%;
   object-fit: cover;
   object-position: center;
-  border: 3px solid #fff;
-  background-color: #f1f3f5;
+  border: 5px solid #fff;
+  background-color: #f8eaf1;
+  box-shadow: 0 3px 12px rgba(60, 30, 60, 0.12);
 }
 
-.cambiarAvatar {
-  max-width: 420px;
-  margin-top: 1rem;
+.datosUsuario {
+  padding-bottom: 0.5rem;
+  min-width: 0;
 }
 
-.cambiarAvatar label {
-  color: rgba(255, 255, 255, 0.9);
+.datosUsuario h1 {
+  font-size: 1.55rem;
+  font-weight: 750;
+  margin: 0;
+  color: #392344;
+  overflow-wrap: anywhere;
 }
 
-.cambiarAvatar input {
-  border: none;
-  border-radius: 0.5rem;
+.datosUsuario p {
+  color: #9a6a91;
+  font-size: 0.95rem;
+  margin: 0.15rem 0 0;
 }
 
-.botonAvatar {
-  background-color: #fff;
-  color: #2b1055;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.375rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  white-space: nowrap;
-  transition: background-color 0.2s ease;
-}
+/* BOTÓN EDITAR */
 
-.botonAvatar:hover {
-  background-color: #e9e2f5;
-}
-
-.botonCerrarSesion {
-  background-color: #fff;
-  color: #2b1055;
-  border: 2px solid #fff;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.botonCerrarSesion:hover {
-  background-color: #2b1055;
-  color: #fff;
-  border-color: #fff;
-}
-
-/* Botón para editar el perfil */
 .botonEditar {
-  background-color: transparent;
-  color: #fff;
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-weight: 600;
+  background: #f9e8f1;
+  color: #913e70;
+  border: 1px solid #f0cddd;
+  border-radius: 0.7rem;
+  padding: 0.55rem 1rem;
+  font-weight: 650;
+  font-size: 0.9rem;
+  white-space: nowrap;
   transition: all 0.2s ease;
+  margin-bottom: 0.5rem;
 }
 
 .botonEditar:hover {
-  background-color: #fff;
-  color: #2b1055;
+  background: #913e70;
+  color: #fff;
+  border-color: #913e70;
 }
 
-/* Fondo oscuro del modal */
+.botonEditar span {
+  margin-right: 0.3rem;
+  font-size: 1.1rem;
+}
+
+/* DESCRIPCIÓN Y ESTADÍSTICAS */
+
+.descripcionPerfil {
+  color: #806b80;
+  font-size: 0.95rem;
+  margin: 1.25rem 0;
+}
+
+.estadisticasPerfil {
+  display: flex;
+  gap: 2rem;
+  border-top: 1px solid #f1e7ef;
+  padding-top: 1rem;
+}
+
+.estadisticasPerfil div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.estadisticasPerfil strong {
+  color: #713d70;
+  font-size: 1.2rem;
+  font-weight: 750;
+}
+
+.estadisticasPerfil span {
+  color: #99859a;
+  font-size: 0.8rem;
+}
+
+/* SECCIÓN DE PUBLICACIONES */
+
+.seccionPublicaciones {
+  margin-top: 2.5rem;
+}
+
+.tituloPublicaciones {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding: 0 0.25rem;
+}
+
+.tituloPublicaciones div > span {
+  color: #b16b99;
+  font-size: 0.7rem;
+  font-weight: 750;
+  letter-spacing: 0.14rem;
+}
+
+.tituloPublicaciones h2 {
+  color: #392344;
+  font-size: 1.45rem;
+  font-weight: 750;
+  margin: 0.2rem 0 0;
+}
+
+.contadorPosts {
+  color: #986b91;
+  background-color: #f8eaf2;
+  border-radius: 2rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.listaPublicaciones {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.publicacion {
+  background-color: #fff;
+  border: 1px solid #f0e3ec;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 3px 12px rgba(80, 35, 75, 0.045);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.publicacion:hover {
+  box-shadow: 0 6px 18px rgba(80, 35, 75, 0.09);
+  transform: translateY(-2px);
+}
+
+/* ESTADOS DE CARGA Y PERFIL VACÍO */
+
+.estadoVacio {
+  background-color: #fff;
+  border: 1px dashed #e6cbdc;
+  border-radius: 1rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: #967b91;
+}
+
+.estadoVacio .spinner-border {
+  color: #a75b91;
+}
+
+.estadoVacio p {
+  margin: 0.75rem auto 0;
+  max-width: 440px;
+  font-size: 0.9rem;
+}
+
+.estadoVacio h3 {
+  color: #694269;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+.iconoVacio {
+  color: #c17da8;
+  font-size: 2.5rem;
+}
+
+/* MODAL DE EDICIÓN */
+
 .modalOverlay {
   position: fixed;
   inset: 0;
   z-index: 1050;
-  background-color: rgba(20, 10, 35, 0.6);
+  background-color: rgba(42, 24, 46, 0.58);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
+  overflow-y: auto;
 }
 
-/* Ventana de edición */
 .modalEditar {
   width: 100%;
-  max-width: 450px;
+  max-width: 460px;
   background-color: #fff;
-  color: #333;
-  border-radius: 1rem;
+  color: #392c3d;
+  border-radius: 1.1rem;
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   animation: aparecer 0.2s ease;
@@ -119,35 +300,74 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #f0e5ed;
 }
 
 .modalHeader h2 {
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 750;
   margin: 0;
+  color: #59375a;
 }
 
 .botonCerrar {
   border: none;
   background: transparent;
   font-size: 1.8rem;
-  color: #777;
+  color: #987f95;
   cursor: pointer;
   line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.botonCerrar:hover {
+  color: #913e70;
 }
 
 .modalContenido {
   padding: 1.5rem;
 }
 
+.modalContenido .form-control {
+  border: 1px solid #e8d8e5;
+  border-radius: 0.6rem;
+  padding: 0.65rem 0.8rem;
+}
+
+.modalContenido .form-control:focus {
+  border-color: #bd82ad;
+  box-shadow: 0 0 0 0.2rem rgba(189, 130, 173, 0.18);
+}
+
+.modalContenido label {
+  color: #59445d;
+}
+
+.vistaPrevia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.vistaPrevia strong {
+  color: #49334e;
+  margin-top: 0.4rem;
+}
+
+.vistaPrevia span {
+  color: #a17b9c;
+  font-size: 0.85rem;
+}
+
 .avatarPreview {
-  width: 110px;
-  height: 110px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #e8d8f5;
-  background-color: #f1f3f5;
+  border: 4px solid #f3dce9;
+  background-color: #f8eaf1;
 }
 
 .modalFooter {
@@ -155,36 +375,38 @@
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #f0e5ed;
 }
 
 .botonCancelar,
 .botonGuardar {
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-weight: 600;
+  border-radius: 0.6rem;
+  padding: 0.55rem 1rem;
+  font-weight: 650;
   transition: all 0.2s ease;
 }
 
 .botonCancelar {
-  background-color: #f1f1f1;
-  color: #555;
+  background-color: #f5f0f4;
+  color: #705c70;
   border: none;
 }
 
 .botonCancelar:hover {
-  background-color: #e2e2e2;
+  background-color: #e9dfe8;
 }
 
 .botonGuardar {
-  background-color: #2b1055;
+  background: linear-gradient(120deg, #a64f83, #7654a0);
   color: #fff;
   border: none;
 }
 
 .botonGuardar:hover {
-  background-color: #45217c;
+  filter: brightness(1.08);
 }
+
+/* ANIMACIÓN */
 
 @keyframes aparecer {
   from {
@@ -198,7 +420,72 @@
   }
 }
 
-@media (max-width: 480px) {
+/* RESPONSIVE */
+
+@media (max-width: 600px) {
+  .contenedorPerfil {
+    padding-top: 1rem;
+  }
+
+  .portadaPerfil {
+    height: 115px;
+  }
+
+  .informacionPerfil {
+    padding: 0 1rem 1.25rem;
+  }
+
+  .encabezadoPerfil {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: -42px;
+    gap: 0.75rem;
+  }
+
+  .identidadPerfil {
+    align-items: flex-end;
+    gap: 0.65rem;
+    width: 100%;
+  }
+
+  .avatarPerfil {
+    width: 90px;
+    height: 90px;
+    min-width: 90px;
+  }
+
+  .datosUsuario h1 {
+    font-size: 1.2rem;
+  }
+
+  .datosUsuario p {
+    font-size: 0.85rem;
+  }
+
+  .botonEditar {
+    margin: 0;
+  }
+
+  .descripcionPerfil {
+    margin-top: 1rem;
+  }
+
+  .estadisticasPerfil {
+    gap: 1.5rem;
+  }
+
+  .seccionPublicaciones {
+    margin-top: 2rem;
+  }
+
+  .tituloPublicaciones h2 {
+    font-size: 1.25rem;
+  }
+
+  .publicacion {
+    padding: 0.65rem;
+  }
+
   .modalFooter {
     flex-direction: column-reverse;
   }
