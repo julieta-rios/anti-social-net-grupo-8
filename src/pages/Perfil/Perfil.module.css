@@ -1,14 +1,10 @@
 
-/* CONTENEDOR GENERAL */
-
 .contenedorPerfil {
   max-width: 900px;
   padding-top: 2rem;
   padding-bottom: 3rem;
   color: #35243b;
 }
-
-/* TARJETA PRINCIPAL DEL PERFIL */
 
 .tarjetaPerfil {
   background-color: #fff;
@@ -17,8 +13,6 @@
   overflow: hidden;
   box-shadow: 0 5px 22px rgba(80, 35, 75, 0.07);
 }
-
-/* PORTADA DECORATIVA */
 
 .portadaPerfil {
   height: 145px;
@@ -69,8 +63,6 @@
   font-size: 3rem;
 }
 
-/* INFORMACIÓN DEL USUARIO */
-
 .informacionPerfil {
   padding: 0 2rem 1.75rem;
 }
@@ -79,6 +71,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 1rem;
   margin-top: -48px;
   position: relative;
@@ -86,8 +79,9 @@
 
 .identidadPerfil {
   display: flex;
-  align-items: flex-end;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1 1 220px;
   min-width: 0;
 }
 
@@ -104,25 +98,23 @@
 }
 
 .datosUsuario {
-  padding-bottom: 0.5rem;
   min-width: 0;
+  flex: 1;
 }
 
 .datosUsuario h1 {
-  font-size: 1.55rem;
-  font-weight: 750;
-  margin: 0;
-  color: #392344;
-  overflow-wrap: anywhere;
+  font-size: 1.5rem;
+  overflow-wrap: normal;
+  word-break: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .datosUsuario p {
-  color: #9a6a91;
-  font-size: 0.95rem;
-  margin: 0.15rem 0 0;
+  font-size: 0.9rem;
 }
-
-/* BOTÓN EDITAR */
 
 .botonEditar {
   background: #f9e8f1;
@@ -147,8 +139,6 @@
   margin-right: 0.3rem;
   font-size: 1.1rem;
 }
-
-/* DESCRIPCIÓN Y ESTADÍSTICAS */
 
 .descripcionPerfil {
   color: #806b80;
@@ -179,8 +169,6 @@
   color: #99859a;
   font-size: 0.8rem;
 }
-
-/* SECCIÓN DE PUBLICACIONES */
 
 .seccionPublicaciones {
   margin-top: 2.5rem;
@@ -237,8 +225,6 @@
   transform: translateY(-2px);
 }
 
-/* ESTADOS DE CARGA Y PERFIL VACÍO */
-
 .estadoVacio {
   background-color: #fff;
   border: 1px dashed #e6cbdc;
@@ -269,8 +255,6 @@
   color: #c17da8;
   font-size: 2.5rem;
 }
-
-/* MODAL DE EDICIÓN */
 
 .modalOverlay {
   position: fixed;
@@ -406,7 +390,7 @@
   filter: brightness(1.08);
 }
 
-/* ANIMACIÓN */
+/* Animacion */
 
 @keyframes aparecer {
   from {
@@ -420,7 +404,27 @@
   }
 }
 
-/* RESPONSIVE */
+/* parte responsive */
+
+@media (max-width: 900px) {
+  .encabezadoPerfil {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: -42px;
+    gap: 0.75rem;
+  }
+
+  .identidadPerfil {
+    width: 100%;
+    flex: none;
+  }
+
+  .accionesPerfil {
+    width: 100%;
+    flex: 1 1 100%;
+    justify-content: flex-start;
+  }
+}
 
 @media (max-width: 600px) {
   .contenedorPerfil {
@@ -443,7 +447,7 @@
   }
 
   .identidadPerfil {
-    align-items: flex-end;
+    align-items: center;
     gap: 0.65rem;
     width: 100%;
   }
@@ -467,7 +471,7 @@
   }
 
   .descripcionPerfil {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
   }
 
   .estadisticasPerfil {
@@ -475,7 +479,7 @@
   }
 
   .seccionPublicaciones {
-    margin-top: 2rem;
+    margin-top: 1.25rem;
   }
 
   .tituloPublicaciones h2 {
@@ -487,7 +491,7 @@
   }
 
   .modalFooter {
-    flex-direction: column-reverse;
+    width: 100%;
   }
 
   .modalFooter button {
@@ -499,8 +503,10 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
+  align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+  min-width: 0;
 }
 
 .botonCrear,
