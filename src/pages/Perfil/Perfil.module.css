@@ -73,3 +73,137 @@
   color: #fff;
   border-color: #fff;
 }
+
+/* Botón para editar el perfil */
+.botonEditar {
+  background-color: transparent;
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.botonEditar:hover {
+  background-color: #fff;
+  color: #2b1055;
+}
+
+/* Fondo oscuro del modal */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  background-color: rgba(20, 10, 35, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* Ventana de edición */
+.modalEditar {
+  width: 100%;
+  max-width: 450px;
+  background-color: #fff;
+  color: #333;
+  border-radius: 1rem;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: aparecer 0.2s ease;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.modalHeader h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.botonCerrar {
+  border: none;
+  background: transparent;
+  font-size: 1.8rem;
+  color: #777;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modalContenido {
+  padding: 1.5rem;
+}
+
+.avatarPreview {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e8d8f5;
+  background-color: #f1f3f5;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.botonCancelar,
+.botonGuardar {
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.botonCancelar {
+  background-color: #f1f1f1;
+  color: #555;
+  border: none;
+}
+
+.botonCancelar:hover {
+  background-color: #e2e2e2;
+}
+
+.botonGuardar {
+  background-color: #2b1055;
+  color: #fff;
+  border: none;
+}
+
+.botonGuardar:hover {
+  background-color: #45217c;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .modalFooter {
+    flex-direction: column-reverse;
+  }
+
+  .modalFooter button {
+    width: 100%;
+  }
+}

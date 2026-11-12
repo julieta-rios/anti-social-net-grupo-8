@@ -7,6 +7,7 @@ import PostCard from "../../components/PostCard/PostCard";
 import defaultAvatar from "../../assets/default-avatar.png";
 import styles from "./Perfil.module.css";
 
+
 interface PostConComentarios extends Post {
   cantidadComentarios: number;
   imagen?: string;
@@ -22,7 +23,7 @@ export default function Perfil() {
   const [errorAvatar, setErrorAvatar] = useState("");
 
   const [urlAvatar, setUrlAvatar] = useState(avatarUrl);
-
+  const [mostrarEditor, setMostrarEditor] = useState(false);
   const userId = user?.id;
 
   useEffect(() => {
@@ -102,14 +103,16 @@ export default function Perfil() {
         if (!["http:", "https:"].includes(urlValidada.protocol)) {
           throw new Error();
         }
+        actualizarAvatar(url);
+        setErrorAvatar("");
+        setMostrarEditor(false);
+        
       } catch {
         setErrorAvatar("Ingresá una URL de imagen válida.");
         return;
       }
     }
 
-    actualizarAvatar(url);
-    setErrorAvatar("");
   };
 
   const handleLogout = () => {
@@ -136,7 +139,12 @@ export default function Perfil() {
             </div>
           </div>
 
-          <div className="d-flex gap-2">
+          <div className="d-flex flex-wrap gap-2">
+            <button type="button" className={styles.botonEditar} onClick={() => setMostrarEditor(true)}>
+              <i className="bi bi-pencil-square me-1"></i>
+              Editar Perfil
+            </button>
+            
             <Link to="/crear-post" className="btn btn-light fw-semibold">
               + Crear publicación
             </Link>
@@ -157,27 +165,88 @@ export default function Perfil() {
           Cambiar foto de perfil
         </label>
 
-        <div className="d-flex gap-2">
-          <input
-            id="avatar"
-            type="url"
-            className="form-control form-control-sm"
-            placeholder="Pegá la URL de tu imagen"
-            value={urlAvatar}
-            onChange={(event) => {
-              setUrlAvatar(event.target.value);
-              setErrorAvatar("");
-            }}
-          />
+        {mostrarEditor && (
+          <div className={styles.modalOverlay}>
+            <div
+              className={styles.modalEditar}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="tituloEditarPerfil"
+            >
+            <div className={styles.modalHeader}>
+              <h2 id="tituloEditarPerfil">Editar perfil</h2>
 
-          <button
-            type="button"
-            className={styles.botonAvatar}
-            onClick={handleGuardarAvatar}
-          >
-            Guardar
-          </button>
-        </div>
+              <button
+                type="button"
+                className={styles.botonCerrar}
+                onClick={() => setMostrarEditor(false)}
+                aria-label="Cerrar"
+              >
+                &times;
+              </button>
+            </div>
+
+            <div className={styles.modalContenido}>
+              <div className="text-center mb-3">
+                <img
+                  src={urlAvatar || defaultAvatar}
+                  alt="Vista previa del avatar"
+                  className={styles.avatarPreview}
+                />
+                <p className="fw-semibold mt-2 mb-0">
+                  @{user?.nickName}
+                </p>
+                <small className="text-muted">
+                  Vista previa de tu perfil
+                </small>
+              </div>
+
+              <label
+                htmlFor="avatar"
+                className="form-label fw-semibold"
+              >
+                Foto de perfil
+              </label>
+
+              <input
+                id="avatar"
+                type="url"
+                className="form-control"
+                placeholder="Pegá la URL de tu imagen"
+                value={urlAvatar}
+                onChange={(event) => {
+                  setUrlAvatar(event.target.value);
+                  setErrorAvatar("");
+                }}
+              />
+
+              {errorAvatar && (
+                <small className="text-danger d-block mt-2">
+                  {errorAvatar}
+                </small>
+              )}
+            </div>
+
+      <div className={styles.modalFooter}>
+        <button
+          type="button"
+          className={styles.botonCancelar}
+          onClick={() => setMostrarEditor(false)}
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          className={styles.botonGuardar}
+          onClick={handleGuardarAvatar}
+        >
+          Guardar cambios
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
         {errorAvatar && <small className="text-warning">{errorAvatar}</small>}
       </div>
