@@ -1,21 +1,180 @@
+
 .postCard {
-  border: none;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #f0e3ec;
   border-radius: 1rem;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
   overflow: hidden;
+  box-shadow: 0 3px 12px rgba(80, 35, 75, 0.05);
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .postCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  border-color: #e8c7da;
+  box-shadow: 0 6px 18px rgba(80, 35, 75, 0.09);
+}
+
+/* ENCABEZADO Y AUTOR */
+
+.encabezadoPost {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem 0.5rem;
+}
+
+.avatarPost {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f3dce9;
+  background-color: #f8eaf1;
+}
+
+.datosAutor {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 0.1rem;
+}
+
+.datosAutor strong {
+  color: #49334e;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.datosAutor span {
+  color: #a17b9c;
+  font-size: 0.8rem;
+}
+
+.etiquetaPublicacion {
+  margin-left: auto;
+  color: #a35c8b;
+  background-color: #f9eaf2;
+  border-radius: 2rem;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+/* TEXTO DE LA PUBLICACIÓN */
+
+.contenidoPost {
+  padding: 0.65rem 1.25rem 1rem;
+}
+
+.descripcionPost {
+  color: #493f4b;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* ETIQUETAS */
+
+.listaTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.tag {
+  color: #913e70;
+  background-color: #f9eaf2;
+  border: 1px solid #f1d8e6;
+  border-radius: 2rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* IMAGEN OPCIONAL */
+
+.contenedorImagen {
+  width: 100%;
+  padding: 0 1.25rem 1rem;
 }
 
 .imagenPost {
+  display: block;
   width: 100%;
-  height: 220px;
-  object-fit: cover;
-  background-color: #f1f3f5;
+  max-height: 480px;
+  object-fit: contain;
+  border-radius: 0.85rem;
+  background-color: #faf7fa;
+}
+
+/* PIE DE LA PUBLICACIÓN */
+
+.piePost {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid #f1e7ef;
+  padding: 0.85rem 1.25rem;
+}
+
+.cantidadComentarios {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #987b94;
+  font-size: 0.82rem;
+}
+
+.cantidadComentarios span {
+  color: #b45d91;
+  font-size: 1.15rem;
+}
+
+.botonVerMas {
+  color: #913e70;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.botonVerMas:hover {
+  color: #633052;
+  text-decoration: underline;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 480px) {
+  .encabezadoPost {
+    padding: 0.85rem 0.9rem 0.4rem;
+  }
+
+  .contenidoPost {
+    padding: 0.65rem 0.9rem 0.85rem;
+  }
+
+  .contenedorImagen {
+    padding: 0 0.9rem 0.85rem;
+  }
+
+  .piePost {
+    padding: 0.75rem 0.9rem;
+  }
+
+  .imagenPost {
+    max-height: 350px;
+  }
+
+  .etiquetaPublicacion {
+    display: none;
+  }
 }

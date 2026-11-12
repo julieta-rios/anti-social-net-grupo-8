@@ -158,7 +158,7 @@ export default function Home() {
             {!cargando &&
               !error &&
               postsFiltrados.map((post) => (
-                <div className="col-md-6" key={post.id}>
+                <div className="col-12" key={post.id}>
                   <PostCard
                     post={post}
                     cantidadComentarios={post.cantidadComentarios}

@@ -494,3 +494,52 @@
     width: 100%;
   }
 }
+ 
+.accionesPerfil {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.botonCrear,
+.botonCerrarSesion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.7rem;
+  padding: 0.55rem 1rem;
+  font-weight: 650;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.botonCrear {
+  background-color: #913e70;
+  color: #fff;
+  border: 1px solid #913e70;
+}
+
+.botonCrear:hover {
+  background-color: #713052;
+  color: #fff;
+}
+
+.botonCerrarSesion {
+  background-color: #fff;
+  color: #913e70;
+  border: 1px solid #e8c7da;
+}
+
+.botonCerrarSesion:hover {
+  background-color: #f9e8f1;
+}
+
+@media (max-width: 600px) {
+  .accionesPerfil {
+    justify-content: flex-start;
+    width: 100%;
+  }
+}

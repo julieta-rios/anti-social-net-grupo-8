@@ -1,6 +1,7 @@
+
 import { Link } from "react-router";
 import type { Post } from "../../types";
-import placeholderPost from "../../assets/placeholder-post.png";
+import defaultAvatar from "../../assets/default-avatar.png";
 import styles from "./PostCard.module.css";
 
 interface PostCardProps {
@@ -14,44 +15,70 @@ export default function PostCard({
   cantidadComentarios,
   imagen,
 }: PostCardProps) {
-  return (
-    <article className={`card h-100 ${styles.postCard}`}>
-      <img
-        src={imagen || placeholderPost}
-        alt="Imagen de la publicación"
-        className={styles.imagenPost}
-        onError={(event) => {
-          event.currentTarget.src = placeholderPost;
-        }}
-      />
+  const tieneImagen = Boolean(imagen?.trim());
 
-      <div className="card-body d-flex flex-column">
-        <div className="d-flex align-items-center gap-2 mb-3">
-          <strong className="small">@{post.User.nickName}</strong>
+  return (
+    <article className={styles.postCard}>
+      <div className={styles.encabezadoPost}>
+        <img
+          src={defaultAvatar}
+          alt="Avatar del usuario"
+          className={styles.avatarPost}
+        />
+
+        <div className={styles.datosAutor}>
+          <strong>{post.User.nickName}</strong>
+          <span>@{post.User.nickName}</span>
         </div>
 
-        <p className="card-text flex-grow-1">{post.description}</p>
+        <span className={styles.etiquetaPublicacion}>
+          Publicación
+        </span>
+      </div>
+
+      <div className={styles.contenidoPost}>
+        <p className={styles.descripcionPost}>
+          {post.description}
+        </p>
 
         {post.Tags.length > 0 && (
-          <div className="d-flex flex-wrap gap-2 mb-3">
+          <div className={styles.listaTags}>
             {post.Tags.map((tag) => (
-              <span key={tag.id} className="badge bg-secondary">
+              <span key={tag.id} className={styles.tag}>
                 #{tag.name}
               </span>
             ))}
           </div>
         )}
+      </div>
 
-        <div className="d-flex justify-content-between align-items-center pt-3 border-top">
-          <small className="text-muted">
-            💬 {cantidadComentarios}{" "}
-            {cantidadComentarios === 1 ? "comentario" : "comentarios"}
-          </small>
-
-          <Link to={`/post/${post.id}`} className="btn btn-sm btn-dark">
-            Ver más
-          </Link>
+      {tieneImagen && (
+        <div className={styles.contenedorImagen}>
+          <img
+            src={imagen}
+            alt="Imagen de la publicación"
+            className={styles.imagenPost}
+            onError={(event) => {
+              event.currentTarget.style.display = "none";
+            }}
+          />
         </div>
+      )}
+
+      <div className={styles.piePost}>
+        <span className={styles.cantidadComentarios}>
+          <span aria-hidden="true">♡</span>
+          {cantidadComentarios}{" "}
+          {cantidadComentarios === 1 ? "comentario" : "comentarios"}
+        </span>
+
+        <Link
+          to={`/post/${post.id}`}
+          className={styles.botonVerMas}
+        >
+          Ver publicación
+          <span aria-hidden="true"> →</span>
+        </Link>
       </div>
     </article>
   );

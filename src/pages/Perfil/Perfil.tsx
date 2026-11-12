@@ -1,4 +1,4 @@
-
+import { Link, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { useUser } from "../../context/UserContext";
 import API_URL from "../../services/api";
@@ -15,6 +15,7 @@ interface PostConComentarios extends Post {
 export default function Perfil() {
   const {
     user,
+    logout,
     avatarUrl,
     actualizarAvatar,
     nombreMostrar,
@@ -150,6 +151,13 @@ export default function Perfil() {
     0
   );
 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <main className={`container ${styles.contenedorPerfil}`}>
       <section className={styles.tarjetaPerfil}>
@@ -175,7 +183,7 @@ export default function Perfil() {
                 <p>@{user?.nickName}</p>
               </div>
             </div>
-
+          <div className={styles.accionesPerfil}>
             <button
               type="button"
               className={styles.botonEditar}
@@ -183,6 +191,14 @@ export default function Perfil() {
             >
               <span aria-hidden="true">✎</span> Editar perfil
             </button>
+
+            <Link to="/crear-post" className={styles.botonCrear}>
+            + Crear publicación </Link>
+            <button type="button" className={styles.botonCerrarSesion} onClick={handleLogout}>
+              Cerrar Sesión 
+            </button>
+          </div>
+           
           </div>
 
           <p className={styles.descripcionPerfil}>
