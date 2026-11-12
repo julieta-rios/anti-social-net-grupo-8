@@ -2,18 +2,54 @@
   padding-bottom: 3rem;
 }
 
-.heroImagen {
-  max-height: 260px;
-  width: 100%;
-  object-fit: cover;
-  border-radius: 0.75rem;
+.contenedorHome :global(.row) {
+  justify-content: center;
+  margin-top: 3rem;
 }
 
-.badgeTag {
-  cursor: pointer;
-  transition: opacity 0.2s ease;
+.contenedorHome h2 {
+  color: #1f1f1f;
+  letter-spacing: -0.3px;
 }
 
-.badgeTag:hover {
-  opacity: 0.85;
+.contenedorHome :global(.btn-dark) {
+  background-color: #d81b60;
+  border-color: #d81b60;
+  color: #ffffff;
+  border-radius: 20px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+@media (max-width: 991px) {
+  .contenedorHome :global(.col-lg-8) > :global(.d-flex) {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.85rem;
+  }
+
+  .contenedorHome :global(.col-lg-8) > :global(.d-flex) :global(.d-flex) {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .contenedorHome {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 2rem;
+  }
+
+  .contenedorHome h2 {
+    font-size: 1.35rem;
+  }
+
+  .contenedorHome :global(.btn-dark),
+  .contenedorHome :global(.btn-outline-dark),
+  .contenedorHome :global(.btn-outline-secondary) {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.85rem;
+  }
 }

@@ -3,7 +3,6 @@ import { Link } from "react-router";
 import API_URL from "../../services/api";
 import type { Post, Tag, PostImage, Comment } from "../../types";
 import PostCard from "../../components/PostCard/PostCard";
-import heroImg from "../../assets/hero.png";
 import styles from "./Home.module.css";
 
 interface PostEnriquecido extends Post {
@@ -101,8 +100,6 @@ export default function Home() {
         {/* Columna principal: publicaciones */}
         <div className="col-lg-8">
           <div className="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
-            <h2 className="h4 m-0 fw-bold">Publicaciones recientes</h2>
-
             {/* Filtro por etiquetas */}
             {tags.length > 0 && (
               <div className="d-flex flex-wrap gap-1 align-items-center">
