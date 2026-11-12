@@ -21,21 +21,15 @@ function Header() {
   return (
     <Navbar expand="lg" className={styles.barraNavegacion}>
       <Container className={styles.contenedor}>
-        <Navbar.Brand
-          as={Link}
-          to="/"
-          className={`position-absolute top-50 start-50 translate-middle m-0 d-flex align-items-center gap-2 ${styles.logo}`}
-        >
-          <span>antisocial_net</span>
-        </Navbar.Brand>
-
+              <Nav.Link as={Link} to="/" className={styles.titulo}>
+              antisocial_net
+            </Nav.Link>
         <Navbar.Toggle
           aria-controls="basic-navbar-nav"
           aria-label="Abrir menú de navegación"
         />
-
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="me-auto align-items-center">
             <Nav.Link as={Link} to="/" className={styles.enlace}>
               Inicio
             </Nav.Link>
@@ -92,7 +86,6 @@ function Header() {
               </>
             )}
           </Nav>
-
         </Navbar.Collapse>
       </Container>
     </Navbar>

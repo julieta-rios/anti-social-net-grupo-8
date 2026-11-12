@@ -6,27 +6,30 @@
   position: relative;
 }
 .contenedor {
-    gap: 1rem;
+  gap: 1rem;
+  position: relative;
 }
-.logo {
-  font-weight: 600;
-  font-size: 1.9rem; 
-  color: #333333;
+.titulo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: #1f1f1f;
   letter-spacing: -0.5px;
-  text-decoration: none;
-  white-space: nowrap;
-}
-.logo:hover {
-    color: #d81b60;
+  font-family: monospace;
+  user-select: none;
+  z-index: 1;
 }
 .avatarHeader {
-    width: 36px;
-    height: 36px;
+  width: 36px;
+  height: 36px;
 }
 a.enlace {
   color: #4a4a4a;
-  font-weight: 500;
-  font-size: 1.1rem;
+  font-weight: 600;
+  font-size: 1rem;
   margin: 0 0.5rem;
   transition: color 0.2s ease-in-out;
 }
@@ -43,10 +46,10 @@ a.enlace:hover {
   color: #d81b60;
 }
 .menuDesplegable :global(.dropdown-menu) {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    padding: 0.5rem 0;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  padding: 0.5rem 0;
 }
 .itemDesplegable {
   color: #333333;
@@ -58,35 +61,28 @@ a.enlace:hover {
   background-color: #f8f9fa;
   color: #d81b60;
 }
-
-
 @media (max-width: 991px) {
-    .barraNavegacion {
-        padding: 0.8rem 0;
-    }
-
-    .contenedor {
-        flex-wrap: wrap;
-    }
-
-    .logo {
-        font-size: 1.6rem;
-        position: static !important;
-        transform: none !important;
-        margin: 0 !important;
-    }
-
-    .enlace {
-        margin: 0.4rem 0;
-    }
-
-    .menuDesplegable > a {
-        margin: 0.4rem 0;
-    }
+  .barraNavegacion {
+    padding: 0.8rem 0;
+  }
+  .contenedor {
+    flex-wrap: wrap;
+  }
+  .titulo {
+    position: static;
+    transform: none;
+    font-size: 1.4rem;
+    margin: 0;
+  }
+  .enlace {
+    margin: 0.4rem 0;
+  }
+  .menuDesplegable > a {
+    margin: 0.4rem 0;
+  }
 }
-
 @media (max-width: 360px) {
-    .logo {
-        font-size: 1.35rem;
-    }
+  .titulo {
+    font-size: 1.2rem;
+  }
 }
