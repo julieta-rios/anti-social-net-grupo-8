@@ -5,7 +5,7 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { useUser } from "../../context/UserContext";
 import Avatar from "../../components/Avatar/Avatar";
-import logo from "../../assets/logo.png";
+
 import defaultAvatar from "../../assets/default-avatar.png";
 import styles from "./Header.module.css";
 
@@ -26,13 +26,7 @@ function Header() {
           to="/"
           className={`position-absolute top-50 start-50 translate-middle m-0 d-flex align-items-center gap-2 ${styles.logo}`}
         >
-          <img
-            src={logo}
-            alt="Logo"
-            style={{ height: "32px", width: "auto" }}
-            onError={(e) => (e.currentTarget.style.display = "none")}
-          />
-          <span>UnaHur Anti-Social Net</span>
+          <span>antisocial_net</span>
         </Navbar.Brand>
 
         <Navbar.Toggle

@@ -97,39 +97,6 @@ export default function Home() {
 
   return (
     <div className={`container mt-4 ${styles.contenedorHome}`}>
-      {/* Banner de bienvenida */}
-      <section className={`p-4 p-md-5 mb-4 ${styles.heroBanner}`}>
-        <div className="row align-items-center">
-          <div className="col-md-7 mb-3 mb-md-0">
-            <span className="badge bg-light text-dark mb-2">
-              UnaHur Anti-Social Net
-            </span>
-
-            <h1 className="display-6 fw-bold">
-              Conectá sin algoritmos ni distracciones
-            </h1>
-
-            <p className="lead mb-3">
-              "Menos ruido, más código y mejores ideas." El espacio de la
-              comunidad donde compartimos lo que realmente importa.
-            </p>
-
-            <Link to="/crear-post" className="btn btn-light fw-semibold">
-              + Crear nueva publicación
-            </Link>
-          </div>
-
-          <div className="col-md-5 text-center">
-            <img
-              src={heroImg}
-              alt="Banner de bienvenida"
-              className={styles.heroImagen}
-              onError={(e) => (e.currentTarget.style.display = "none")}
-            />
-          </div>
-        </div>
-      </section>
-
       <div className="row g-4">
         {/* Columna principal: publicaciones */}
         <div className="col-lg-8">
@@ -202,56 +169,6 @@ export default function Home() {
                   />
                 </div>
               ))}
-          </div>
-        </div>
-
-        {/* Columna lateral */}
-        <div className="col-lg-4">
-          <div className={`card p-4 mb-4 ${styles.tarjetaLateral}`}>
-            <h3 className="h5 fw-bold mb-2">Sobre nosotros</h3>
-
-            <p className="text-muted mb-0">
-              <strong>UnaHur Anti-Social Net</strong> nació como un proyecto de
-              Construcción de Interfaces de Usuario. Buscamos volver a las
-              raíces de internet: compartir ideas, proyectos y debates entre
-              estudiantes sin publicidad invasiva.
-            </p>
-          </div>
-
-          <div className={`card p-4 mb-4 ${styles.tarjetaLateral}`}>
-            <h3 className="h5 fw-bold mb-3">Frases destacadas</h3>
-
-            <blockquote className="blockquote fs-6 mb-3">
-              "Primero resolvé el problema. Después, escribí el código."
-              <footer className="blockquote-footer mt-1">John Johnson</footer>
-            </blockquote>
-
-            <blockquote className="blockquote fs-6 mb-0">
-              "El código es como el humor. Cuando tenés que explicarlo, es
-              malo."
-              <footer className="blockquote-footer mt-1">Cory House</footer>
-            </blockquote>
-          </div>
-
-          <div className={`card p-4 ${styles.tarjetaLateral}`}>
-            <h3 className="h5 fw-bold mb-2">¿Sabías que...? 💡</h3>
-
-            <ul className="text-muted ps-3 mb-0">
-              <li className="mb-2">
-                El primer sitio web de la historia sigue online y fue creado por
-                Tim Berners-Lee en 1991.
-              </li>
-
-              <li className="mb-2">
-                TypeScript fue lanzado públicamente por Microsoft en octubre de
-                2012 tras dos años de desarrollo interno.
-              </li>
-
-              <li>
-                Las Single Page Applications (SPA) recargan únicamente los datos
-                necesarios mediante JSON sin refrescar todo el navegador.
-              </li>
-            </ul>
           </div>
         </div>
       </div>

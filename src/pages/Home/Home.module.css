@@ -2,14 +2,6 @@
   padding-bottom: 3rem;
 }
 
-.heroBanner {
-  background: linear-gradient(135deg, #2b1055 0%, #7597de 100%);
-  color: #ffffff;
-  border-radius: 1rem;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
 .heroImagen {
   max-height: 260px;
   width: 100%;
@@ -24,10 +16,4 @@
 
 .badgeTag:hover {
   opacity: 0.85;
-}
-
-.tarjetaLateral {
-  border: none;
-  border-radius: 1rem;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
