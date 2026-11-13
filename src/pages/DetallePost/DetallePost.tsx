@@ -5,7 +5,7 @@ import { useUser } from "../../context/UserContext";
 import API_URL from "../../services/api";
 import type { Post, Comment, PostImage } from "../../types";
 import placeholderPost from "../../assets/placeholder-post.png";
-import defaultAvatar from "../../assets/default-avatar.png";
+import defaultAvatar from "../../assets/default-avatar.jpg";
 import styles from "./DetallePost.module.css";
 
 export default function DetallePost() {

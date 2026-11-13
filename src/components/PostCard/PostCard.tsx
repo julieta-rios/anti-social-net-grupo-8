@@ -1,7 +1,8 @@
-
 import { Link } from "react-router";
 import type { Post } from "../../types";
-import defaultAvatar from "../../assets/default-avatar.png";
+import { useUser } from "../../context/UserContext";
+import Avatar from "../Avatar/Avatar";
+import defaultAvatar from "../../assets/default-avatar.jpg";
 import styles from "./PostCard.module.css";
 
 interface PostCardProps {
@@ -15,14 +16,21 @@ export default function PostCard({
   cantidadComentarios,
   imagen,
 }: PostCardProps) {
+  const { user, avatarUrl } = useUser();
   const tieneImagen = Boolean(imagen?.trim());
+
+  // recupera el avatar correspondiente al autor del post
+  const avatarAutor =
+    user?.id === post.UserId
+      ? avatarUrl
+      : localStorage.getItem(`avatar-${post.UserId}`) || "";
 
   return (
     <article className={styles.postCard}>
       <div className={styles.encabezadoPost}>
-        <img
-          src={defaultAvatar}
-          alt="Avatar del usuario"
+        <Avatar
+          src={avatarAutor || defaultAvatar}
+          alt={`Avatar de ${post.User.nickName}`}
           className={styles.avatarPost}
         />
 
@@ -63,7 +71,7 @@ export default function PostCard({
 
       <div className={styles.piePost}>
         <span className={styles.cantidadComentarios}>
-          <span aria-hidden="true">♡</span>
+          <span aria-hidden="true">💬</span>
           {cantidadComentarios}{" "}
           {cantidadComentarios === 1 ? "comentario" : "comentarios"}
         </span>

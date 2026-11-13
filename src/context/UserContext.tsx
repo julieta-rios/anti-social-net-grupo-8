@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 import type { User } from "../types";
@@ -9,11 +8,11 @@ interface UserContextType {
   user: User | null;
   avatarUrl: string;
   nombreMostrar: string;
+  descripcionPerfil: string;
   login: (user: User) => void;
   logout: () => void;
   actualizarAvatar: (url: string) => void;
   actualizarNombre: (nombre: string) => void;
-  descripcionPerfil: string;
   actualizarDescripcion: (descripcion: string) => void;
 }
 
@@ -27,7 +26,6 @@ export function UserProvider({ children }: UserProviderProps) {
   const [user, setUser] = useState<User | null>(() => {
     const usuarioGuardado = localStorage.getItem("user");
     return usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
-
   });
 
   const [avatarUrl, setAvatarUrl] = useState(() => {
@@ -61,17 +59,16 @@ export function UserProvider({ children }: UserProviderProps) {
     setUser(user);
     setAvatarUrl(localStorage.getItem(`avatar-${user.id}`) || "");
     setNombreMostrar(localStorage.getItem(`nombre-${user.id}`) || "");
-    localStorage.setItem("user", JSON.stringify(user));
-    localStorage.getItem(`descripcion-${user.id}`) || "";
     setDescripcionPerfil(localStorage.getItem(`descripcion-${user.id}`) || "");
+    localStorage.setItem("user", JSON.stringify(user));
   };
 
   const logout = () => {
     setUser(null);
     setAvatarUrl("");
     setNombreMostrar("");
-    localStorage.removeItem("user");
     setDescripcionPerfil("");
+    localStorage.removeItem("user");
   };
 
   const actualizarAvatar = (url: string) => {
@@ -89,6 +86,15 @@ export function UserProvider({ children }: UserProviderProps) {
   const actualizarNombre = (nombre: string) => {
     if (!user) return;
 
+    setNombreMostrar(nombre);
+    
+    if (nombre.trim()) {
+      localStorage.setItem(`nombre-${user.id}`, nombre.trim());
+    } else {
+      localStorage.removeItem(`nombre-${user.id}`);
+    }
+    };
+
   const actualizarDescripcion = (descripcion: string) => {
     if (!user) return;
 
@@ -97,37 +103,12 @@ export function UserProvider({ children }: UserProviderProps) {
     if (descripcion.trim()) {
       localStorage.setItem(
         `descripcion-${user.id}`,
-        
         descripcion.trim()
       );
     } else {
       localStorage.removeItem(`descripcion-${user.id}`);
     }
 };
-
-    setNombreMostrar(nombre);
-
-    if (nombre.trim()) {
-      localStorage.setItem(`nombre-${user.id}`, nombre.trim());
-    } else {
-      localStorage.removeItem(`nombre-${user.id}`);
-    }
-  };
-
-  const actualizarDescripcion = (descripcion: string) => {
-    if (!user) return;
-
-    setDescripcionPerfil(descripcion);
-
-    if (descripcion.trim()) {
-      localStorage.setItem(
-        `descripcion-${user.id}`,
-        descripcion.trim()
-      );
-    } else {
-      localStorage.removeItem(`descripcion-${user.id}`);
-    }
-  };
 
   return (
     <UserContext.Provider

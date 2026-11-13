@@ -5,8 +5,7 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { useUser } from "../../context/UserContext";
 import Avatar from "../../components/Avatar/Avatar";
-
-import defaultAvatar from "../../assets/default-avatar.png";
+import defaultAvatar from "../../assets/default-avatar.jpg";
 import styles from "./Header.module.css";
 
 function Header() {

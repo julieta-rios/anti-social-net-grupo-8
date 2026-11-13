@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-//import { Link } from "react-router";
 import API_URL from "../../services/api";
 import type { Post, Tag, PostImage, Comment } from "../../types";
 import PostCard from "../../components/PostCard/PostCard";

@@ -4,7 +4,7 @@ import { useUser } from "../../context/UserContext";
 import API_URL from "../../services/api";
 import type { Post, Comment, PostImage } from "../../types";
 import PostCard from "../../components/PostCard/PostCard";
-import defaultAvatar from "../../assets/default-avatar.png";
+import defaultAvatar from "../../assets/default-avatar.jpg";
 import styles from "./Perfil.module.css";
 
 interface PostConComentarios extends Post {

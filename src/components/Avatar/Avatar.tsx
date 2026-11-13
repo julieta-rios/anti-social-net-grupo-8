@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import defaultAvatar from "../../assets/default-avatar.png";
+import defaultAvatar from "../../assets/default-avatar.jpg";
 import styles from "./Avatar.module.css";
 
 interface AvatarProps {
@@ -13,22 +13,38 @@ export default function Avatar({
   alt = "Foto de perfil",
   className = "",
 }: AvatarProps) {
+  const fuente = src?.trim() || defaultAvatar;
+
   const [cargando, setCargando] = useState(true);
-  const [imagen, setImagen] = useState(src || defaultAvatar);
+  const [imagen, setImagen] = useState(fuente);
 
   useEffect(() => {
+    let activo = true;
+
     setCargando(true);
-    setImagen(src || defaultAvatar);
-  }, [src]);
 
-  const handleLoad = () => {
-    setCargando(false);
-  };
+    const imagenPrueba = new Image();
 
-  const handleError = () => {
-    setImagen(defaultAvatar);
-    setCargando(false);
-  };
+    imagenPrueba.onload = () => {
+      if (activo) {
+        setImagen(fuente);
+        setCargando(false);
+      }
+    };
+
+    imagenPrueba.onerror = () => {
+      if (activo) {
+        setImagen(defaultAvatar);
+        setCargando(false);
+      }
+    };
+
+    imagenPrueba.src = fuente;
+
+    return () => {
+      activo = false;
+    };
+  }, [fuente]);
 
   return (
     <div className={`${styles.contenedorAvatar} ${className}`}>
@@ -41,8 +57,6 @@ export default function Avatar({
       <img
         src={imagen}
         alt={alt}
-        onLoad={handleLoad}
-        onError={handleError}
         className={cargando ? styles.imagenOculta : styles.imagen}
       />
     </div>
