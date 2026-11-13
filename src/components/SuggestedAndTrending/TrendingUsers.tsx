@@ -1,31 +1,32 @@
-
-// Estructura de un usuario sugerido
-export interface UsuarioSugerido {
+// Estructura de un usuario tendencia
+export interface TrendingUser {
     id: number;
     nombre: string;
     interes: string;
     avatar: string;
     siguiendo: boolean;
+    seguidores: number;
+    likes: number;
+    numeroDePosts: number;
 }
 
 interface HomeFeedProps {
-    usuarios: UsuarioSugerido[];
+    usuarios: TrendingUser[];
     onToggleSeguir: (id: number) => void;
 }
-
-export default function HomeFeed({ usuarios, onToggleSeguir }: HomeFeedProps) {
-    const sugeridosNoSeguidos = (usuarios || []).filter((u) => !u.siguiendo);
+export default function ({ usuarios, onToggleSeguir }: HomeFeedProps) {
+    const trendingNoSeguidos = (usuarios || []).filter((u) => !u.siguiendo);
     
     return (
         <div className="card shadow-sm border-0 p-3 bg-white rounded-4 sticky-top w-100" style={{ top: '1.5rem' }}>
             <h5 className="fw-bold mb-3 text-dark fs-6 border-bottom pb-2">
-                Sugeridos para ti
+                Son tendencia
             </h5>
             <div className="d-flex flex-column gap-3">
-                {sugeridosNoSeguidos.length === 0 ? (
+                {trendingNoSeguidos.length === 0 ? (
                     <p className="text-muted small text-center mb-0">No hay más sugerencias por ahora.</p>
                 ) : (
-                    sugeridosNoSeguidos.map((usuario) => (
+                    trendingNoSeguidos.map((usuario) => (
                         <div className="d-flex align-items-center justify-content-between" key={usuario.id}>
                             <div className="d-flex align-items-center gap-2">
                                 <img

@@ -3,7 +3,8 @@ import API_URL from "../../services/api";
 import type { Post, Tag, PostImage, Comment } from "../../types";
 import PostCard from "../../components/PostCard/PostCard";
 import styles from "./Home.module.css";
-import HomeFeed, { type UsuarioSugerido } from "../../components/Suggested/HomeFeed";
+import SuggestedUsers, { type UsuarioSugerido } from "../../components/SuggestedAndTrending/SuggestedUsers";
+import TrendingUsers, { type TrendingUser } from "../../components/SuggestedAndTrending/TrendingUsers";
 
 interface PostEnriquecido extends Post {
   imagenesCargadas: PostImage[];
@@ -17,7 +18,7 @@ export default function Home() {
   const [cargando, setCargando] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
-  // Carga del estado leyendo de localStorage (por si existe algo guardado previamente)
+  // Manejo del estado de un usuario sugerido mediante persistencia con localStorage
   const [usuariosSugeridos, setUsuariosSugeridos] = useState<UsuarioSugerido[]>(() => {
     const guardados = localStorage.getItem('usuariosSugeridos');
     if (guardados) {
@@ -34,19 +35,59 @@ export default function Home() {
     ];
   });
 
-  // Escritura en localStorage cada vez que el estado de usuariosSugeridos cambia
-  useEffect(() => {
+   useEffect(() => {
     localStorage.setItem('usuariosSugeridos', JSON.stringify(usuariosSugeridos));
   }, [usuariosSugeridos]);
 
-  const handleToggleSeguir = (id: number): void => {
+  // Manejo del estado de un usuario tendencia mediante persistencia con localStorage
+  const [trendingUsers, setTrendingUsers] = useState<TrendingUser[]>(() => {
+    const guardados = localStorage.getItem('trendingUsers');
+    if (guardados) {
+      try {
+        return JSON.parse(guardados);
+      } catch {
+        // Si hay algún error al parsear, retorna el valor por defecto
+      }
+    }
+    return [
+      { id: 101, nombre: 'Lucía Tech', avatar: 'https://via.placeholder.com/40', siguiendo: false, seguidores: 4500, likes: 1200, numeroDePosts: 32 },
+      { id: 102, nombre: 'Dev Master', avatar: 'https://via.placeholder.com/40', siguiendo: false, seguidores: 8900, likes: 3400, numeroDePosts: 54 },
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('trendingUsers', JSON.stringify(trendingUsers));
+  }, [trendingUsers]);
+
+  //Funciones de seguimiento para ambos tipo de usuario
+  const handleToggleSeguirSugerido = (id: number): void => {
     setUsuariosSugeridos((prev) =>
       prev.map((u) => (u.id === id ? { ...u, siguiendo: !u.siguiendo } : u))
     );
   };
 
+  const handleToggleSeguirTrending = (id: number): void => {
+    setTrendingUsers((prev) =>
+      prev.map((u) => (u.id === id ? { ...u, siguiendo: !u.siguiendo } : u))
+    );
+  };
+
   //Filtro de seguidos
-  const usuariosSeguidos = usuariosSugeridos.filter((u) => u.siguiendo);
+  const usuariosSeguidos = [
+    ...usuariosSugeridos.filter((u) => u.siguiendo),
+    ...trendingUsers.filter((u) => u.siguiendo)
+  ];
+
+  // Función para manejar el "Dejar de seguir" por ID
+  const handleDejarDeSeguir = (id: number): void => {
+    setUsuariosSugeridos((prev) =>
+      prev.map((u) => (u.id === id ? { ...u, siguiendo: false } : u))
+    );
+    
+    setTrendingUsers((prev) =>
+      prev.map((u) => (u.id === id ? { ...u, siguiendo: false } : u))
+    );
+  };
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -152,7 +193,7 @@ export default function Home() {
                     <button
                       className="btn btn-outline-danger btn-sm py-0 px-2 mt-1"
                       style={{ fontSize: '0.65rem' }}
-                      onClick={() => handleToggleSeguir(usuario.id)}
+                      onClick={() => handleDejarDeSeguir(usuario.id)}
                     >
                       Dejar de seguir
                     </button>
@@ -229,7 +270,10 @@ export default function Home() {
           </div>
         </div>
         <div className="col-lg-4">
-          <HomeFeed usuarios={usuariosSugeridos} onToggleSeguir={handleToggleSeguir} />
+          <div className="d-flex flex-column align-item center justify-content-center gap-3">
+            <SuggestedUsers usuarios={usuariosSugeridos} onToggleSeguir={handleToggleSeguirSugerido} />
+            <TrendingUsers usuarios={trendingUsers} onToggleSeguir={handleToggleSeguirTrending} />
+          </div>
         </div>
       </div>
     </div>
