@@ -3,6 +3,7 @@ import API_URL from "../../services/api";
 import type { Post, Tag, PostImage, Comment } from "../../types";
 import PostCard from "../../components/PostCard/PostCard";
 import styles from "./Home.module.css";
+import HomeFeed, { type UsuarioSugerido } from "../../components/Suggested/HomeFeed";
 
 interface PostEnriquecido extends Post {
   imagenesCargadas: PostImage[];
@@ -15,6 +16,37 @@ export default function Home() {
   const [tagSeleccionado, setTagSeleccionado] = useState<string>("");
   const [cargando, setCargando] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
+
+  // Carga del estado leyendo de localStorage (por si existe algo guardado previamente)
+  const [usuariosSugeridos, setUsuariosSugeridos] = useState<UsuarioSugerido[]>(() => {
+    const guardados = localStorage.getItem('usuariosSugeridos');
+    if (guardados) {
+      try {
+        return JSON.parse(guardados);
+      } catch {
+        // Si hay algún error al parsear, retorna el valor por defecto
+      }
+    }
+    return [
+      { id: 1, nombre: 'Sofía Martínez', interes: 'Interés en #Tecnología', avatar: 'https://via.placeholder.com/40', siguiendo: false },
+      { id: 2, nombre: 'Carlos Gómez', interes: 'Publicó sobre #React', avatar: 'https://via.placeholder.com/40', siguiendo: false },
+      { id: 3, nombre: 'Juan Perez', interes: 'Publicó sobre #TypeScript', avatar: 'https://via.placeholder.com/40', siguiendo: false },
+    ];
+  });
+
+  // Escritura en localStorage cada vez que el estado de usuariosSugeridos cambia
+  useEffect(() => {
+    localStorage.setItem('usuariosSugeridos', JSON.stringify(usuariosSugeridos));
+  }, [usuariosSugeridos]);
+
+  const handleToggleSeguir = (id: number): void => {
+    setUsuariosSugeridos((prev) =>
+      prev.map((u) => (u.id === id ? { ...u, siguiendo: !u.siguiendo } : u))
+    );
+  };
+
+  //Filtro de seguidos
+  const usuariosSeguidos = usuariosSugeridos.filter((u) => u.siguiendo);
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -89,8 +121,8 @@ export default function Home() {
   // Filtrar publicaciones por etiqueta
   const postsFiltrados = tagSeleccionado
     ? posts.filter((post) =>
-        post.Tags.some((tag) => tag.name === tagSeleccionado),
-      )
+      post.Tags.some((tag) => tag.name === tagSeleccionado),
+    )
     : posts;
 
   return (
@@ -98,15 +130,45 @@ export default function Home() {
       <div className="row g-4">
         {/* Columna principal: publicaciones */}
         <div className="col-lg-8">
+          {usuariosSeguidos.length > 0 && (
+            <div className="card shadow-sm border-0 p-3 bg-white rounded-4 mb-4">
+              <h6 className="fw-bold text-dark mb-3">Siguiendo recientemente</h6>
+              <div className="d-flex flex-row gap-3 overflow-auto pb-2">
+                {usuariosSeguidos.map((usuario) => (
+                  <div
+                    key={usuario.id}
+                    className="d-flex flex-column align-items-center p-2 border rounded-3 bg-light text-center"
+                    style={{ minWidth: '110px', flex: '0 0 auto' }}
+                  >
+                    <img
+                      src={usuario.avatar}
+                      alt={usuario.nombre}
+                      className="rounded-circle mb-1"
+                      style={{ width: '45px', height: '45px', objectFit: 'cover' }}
+                    />
+                    <span className="small fw-semibold text-dark text-truncate w-100" style={{ fontSize: '0.8rem' }}>
+                      {usuario.nombre.split(' ')[0]}
+                    </span>
+                    <button
+                      className="btn btn-outline-danger btn-sm py-0 px-2 mt-1"
+                      style={{ fontSize: '0.65rem' }}
+                      onClick={() => handleToggleSeguir(usuario.id)}
+                    >
+                      Dejar de seguir
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
             {/* Filtro por etiquetas */}
             {tags.length > 0 && (
               <div className="d-flex flex-wrap gap-1 align-items-center">
                 <button
                   type="button"
-                  className={`btn btn-sm ${
-                    tagSeleccionado === "" ? "btn-dark" : "btn-outline-dark"
-                  }`}
+                  className={`btn btn-sm ${tagSeleccionado === "" ? "btn-dark" : "btn-outline-dark"
+                    }`}
                   onClick={() => setTagSeleccionado("")}
                 >
                   Todas
@@ -116,11 +178,10 @@ export default function Home() {
                   <button
                     key={tag.id}
                     type="button"
-                    className={`btn btn-sm ${
-                      tagSeleccionado === tag.name
-                        ? "btn-dark"
-                        : "btn-outline-secondary"
-                    }`}
+                    className={`btn btn-sm ${tagSeleccionado === tag.name
+                      ? "btn-dark"
+                      : "btn-outline-secondary"
+                      }`}
                     onClick={() => setTagSeleccionado(tag.name)}
                   >
                     #{tag.name}
@@ -166,6 +227,9 @@ export default function Home() {
                 </div>
               ))}
           </div>
+        </div>
+        <div className="col-lg-4">
+          <HomeFeed usuarios={usuariosSugeridos} onToggleSeguir={handleToggleSeguir} />
         </div>
       </div>
     </div>

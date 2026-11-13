@@ -2,7 +2,7 @@
   background-color: #fce4ec; 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   padding: 1rem 0; 
-  z-index: 10;
+  z-index: 1050;
   position: relative;
 }
 .contenedor {
