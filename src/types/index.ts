@@ -33,8 +33,3 @@ export interface Post {
   createdAt: string;
   updatedAt?: string;
 }
-
-interface PostConComentarios extends Post {
-    cantidadComentarios: number;
-    imagen?: string;
-}

@@ -20,6 +20,8 @@ export default function Perfil() {
     actualizarAvatar,
     nombreMostrar,
     actualizarNombre,
+    descripcionPerfil,
+    actualizarDescripcion,
   } = useUser();
 
   const [misPosts, setMisPosts] = useState<PostConComentarios[]>([]);
@@ -29,6 +31,7 @@ export default function Perfil() {
 
   const [urlAvatar, setUrlAvatar] = useState(avatarUrl);
   const [nombreBorrador, setNombreBorrador] = useState(nombreMostrar);
+  const [descripcionBorrador, setDescripcionBorrador] = useState(descripcionPerfil);
   const [mostrarEditor, setMostrarEditor] = useState(false);
 
   const userId = user?.id;
@@ -46,16 +49,25 @@ export default function Perfil() {
         setCargando(true);
         setError("");
 
-        const response = await fetch(`${API_URL}/posts?userId=${userId}`);
+        const response = await fetch(`${API_URL}/posts`);
 
-        if (!response.ok) {
-          throw new Error("No se pudieron cargar tus publicaciones.");
-        }
+          if (!response.ok) {
+            throw new Error("No se pudieron cargar tus publicaciones.");
+          }
 
-        const dataPosts: Post[] = await response.json();
+          const dataPosts: Post[] = await response.json();
+
+          console.log("Usuario logueado:", userId); //
+          console.log("Publicaciones recibidas:", dataPosts); //
+
+          const misPublicaciones = dataPosts.filter(
+            (post) => post.UserId === userId
+          );
+          
+          console.log("Mis publicaciones filtradas:", misPublicaciones); //
 
         const postsEnriquecidos = await Promise.all(
-          dataPosts.map(async (post) => {
+          misPublicaciones.map(async (post) => {
             let cantidadComentarios = 0;
             let imagen: string | undefined;
 
@@ -114,6 +126,7 @@ export default function Perfil() {
     setNombreBorrador(nombreMostrar);
     setErrorAvatar("");
     setMostrarEditor(true);
+    setDescripcionBorrador(descripcionPerfil);
   };
 
   const cerrarEditor = () => {
@@ -121,6 +134,7 @@ export default function Perfil() {
     setNombreBorrador(nombreMostrar);
     setErrorAvatar("");
     setMostrarEditor(false);
+    setDescripcionBorrador(descripcionPerfil);
   };
 
   const handleGuardarPerfil = () => {
@@ -142,6 +156,7 @@ export default function Perfil() {
 
     actualizarAvatar(url);
     actualizarNombre(nombre);
+    actualizarDescripcion(descripcionBorrador);
     setErrorAvatar("");
     setMostrarEditor(false);
   };
@@ -151,12 +166,21 @@ export default function Perfil() {
     0
   );
 
+  console.log("Publicaciones guardadas en el estado:", misPosts);
+  console.log("Cantidad de publicaciones:", misPosts.length);
+  console.log("Cargando:", cargando);
+  console.log("Error:", error);
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
+
+  useEffect(() => {
+    setDescripcionBorrador(descripcionPerfil);
+  }, [descripcionPerfil]);
 
   return (
     <main className={`container ${styles.contenedorPerfil}`}>
@@ -202,7 +226,8 @@ export default function Perfil() {
           </div>
 
           <p className={styles.descripcionPerfil}>
-            Un espacio para compartir ideas, intereses y experiencias.
+            {descripcionPerfil.trim() ||
+              "Un espacio para compartir ideas, intereses y experiencias."}
           </p>
 
           <div className={styles.estadisticasPerfil}>
@@ -285,6 +310,31 @@ export default function Perfil() {
                 <small className="text-muted">
                   Este nombre se mostrará en tu perfil. Tu usuario seguirá
                   siendo @{user?.nickName}.
+                </small>
+              </div>
+
+              <div className="mb-3">
+                <label
+                  htmlFor="descripcionPerfil"
+                  className="form-label fw-semibold"
+                >
+                  Descripción de perfil
+                </label>
+
+                <textarea
+                  id="descripcionPerfil"
+                  className="form-control"
+                  placeholder="Contales algo sobre vos..."
+                  maxLength={160}
+                  rows={3}
+                  value={descripcionBorrador}
+                  onChange={(event) =>
+                    setDescripcionBorrador(event.target.value)
+                  }
+                />
+
+                <small className="text-muted">
+                  Escribí una breve presentación. Máximo 160 caracteres.
                 </small>
               </div>
 

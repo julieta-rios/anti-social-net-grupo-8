@@ -30,10 +30,6 @@ export default function PostCard({
           <strong>{post.User.nickName}</strong>
           <span>@{post.User.nickName}</span>
         </div>
-
-        <span className={styles.etiquetaPublicacion}>
-          Publicación
-        </span>
       </div>
 
       <div className={styles.contenidoPost}>
