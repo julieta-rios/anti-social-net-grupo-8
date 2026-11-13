@@ -16,7 +16,7 @@ export default function PostCard({
   cantidadComentarios,
   imagen,
 }: PostCardProps) {
-  const { user, avatarUrl } = useUser();
+  const { user, avatarUrl, nombreMostrar } = useUser();
   const tieneImagen = Boolean(imagen?.trim());
 
   // recupera el avatar correspondiente al autor del post
@@ -24,6 +24,12 @@ export default function PostCard({
     user?.id === post.UserId
       ? avatarUrl
       : localStorage.getItem(`avatar-${post.UserId}`) || "";
+
+  const nombreAutor =
+    user?.id === post.UserId
+      ? nombreMostrar.trim() || post.User.nickName
+      : localStorage.getItem(`nombre-${post.UserId}`)?.trim() ||
+        post.User.nickName;
 
   return (
     <article className={styles.postCard}>
@@ -35,7 +41,7 @@ export default function PostCard({
         />
 
         <div className={styles.datosAutor}>
-          <strong>{post.User.nickName}</strong>
+          <strong>{nombreAutor}</strong>
           <span>@{post.User.nickName}</span>
         </div>
       </div>

@@ -9,7 +9,7 @@ import defaultAvatar from "../../assets/default-avatar.jpg";
 import styles from "./Header.module.css";
 
 function Header() {
-  const { user, logout, avatarUrl } = useUser();
+  const { user, logout, avatarUrl, nombreMostrar } = useUser();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -50,7 +50,7 @@ function Header() {
                       alt="Foto de perfil"
                       className={styles.avatarHeader}
                     />
-                    <span>{user.nickName}</span>
+                    <span>{nombreMostrar.trim() || user?.nickName}</span>
                   </span>
                 }
                 id="cuenta-dropdown"
