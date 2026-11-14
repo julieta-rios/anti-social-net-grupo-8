@@ -397,9 +397,6 @@ export default function Perfil() {
             <span>MÁS DE VOS</span>
             <h2>Mis publicaciones</h2>
           </div>
-          <span className={styles.contadorPosts}>
-            {misPosts.length} {misPosts.length === 1 ? "post" : "posts"}
-          </span>
         </div>
 
         {cargando && (

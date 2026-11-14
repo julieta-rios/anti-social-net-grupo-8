@@ -6,8 +6,24 @@
 .tarjetaPrincipal {
   border: none;
   border-radius: 1rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(80, 35, 75, 0.08);
   overflow: hidden;
+  background-color: #ffffff;
+}
+
+.tarjetaPrincipal h4 {
+  color: #49334e;
+}
+
+.tarjetaPrincipal textarea {
+  border: 1px solid #e8c7da;
+  border-radius: 0.6rem;
+  resize: vertical;
+}
+
+.tarjetaPrincipal textarea:focus {
+  border-color: #c77da5;
+  box-shadow: 0 0 0 0.2rem rgba(145, 62, 112, 0.15);
 }
 
 .galeriaImagenes {
@@ -22,7 +38,7 @@
   max-height: 400px;
   object-fit: cover;
   border-radius: 0.75rem;
-  background-color: #f1f3f5;
+  background-color: #f9e8f1;
 }
 
 .avatar {
@@ -44,7 +60,58 @@
 }
 
 .tarjetaComentario {
-  border: 1px solid #e9ecef;
+  border: 1px solid #f0cddd;
   border-radius: 0.75rem;
   background-color: #ffffff;
+}
+
+.botonVolver {
+  background-color: #fff;
+  color: #913e70;
+  border: 1px solid #e8c7da;
+  border-radius: 0.6rem;
+  transition: background-color 0.2s ease;
+}
+
+.botonVolver:hover {
+  background-color: #f9e8f1;
+  color: #913e70;
+  border-color: #e8c7da;
+}
+
+.botonVolver:focus {
+  box-shadow: 0 0 0 0.2rem rgba(145, 62, 112, 0.15);
+}
+
+
+.botonPublicar {
+  background-color: #913e70;
+  color: #ffffff;
+  border: 1px solid #913e70;
+  border-radius: 0.6rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.botonPublicar:hover {
+  background-color: #713052;
+  color: #ffffff;
+  border-color: #713052;
+}
+
+.botonPublicar:disabled {
+  background-color: #913e70;
+  color: #ffffff;
+  border-color: #913e70;
+  opacity: 0.6;
+}
+
+.etiquetaPublicacion {
+  color: #a35c8b;
+  background-color: #f9eaf2;
+  border-radius: 2rem;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 650;
+  white-space: nowrap;
 }
