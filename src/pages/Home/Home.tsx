@@ -202,6 +202,7 @@ export default function Home() {
               </div>
             </div>
           )}
+          <span className={styles.textoPublicaciones}>Publicaciones</span>
           <div className="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
             {/* Filtro por etiquetas */}
             {tags.length > 0 && (
