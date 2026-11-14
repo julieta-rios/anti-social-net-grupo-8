@@ -16,13 +16,17 @@
   background-color: #d81b60;
   border-color: #d81b60;
   color: #ffffff;
-  border-radius: 20px;
   padding: 0.3rem 0.9rem;
   font-size: 0.9rem;
   font-weight: 500;
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
-
+.textoPublicaciones{
+  display: block;
+  margin-bottom: 0.7rem;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  font-weight: 500;
+}
 @media (max-width: 991px) {
   .contenedorHome :global(.col-lg-8) > :global(.d-flex) {
     flex-direction: column;
@@ -33,6 +37,10 @@
   .contenedorHome :global(.col-lg-8) > :global(.d-flex) :global(.d-flex) {
     justify-content: center;
   }
+  .textoPublicaciones{
+    text-align: center;
+    margin-bottom: 0.6rem;
+  }
 }
 
 @media (max-width: 576px) {
@@ -41,15 +49,17 @@
     padding-right: 1rem;
     padding-bottom: 2rem;
   }
-
   .contenedorHome h2 {
     font-size: 1.35rem;
   }
-
   .contenedorHome :global(.btn-dark),
   .contenedorHome :global(.btn-outline-dark),
   .contenedorHome :global(.btn-outline-secondary) {
     padding: 0.25rem 0.75rem;
     font-size: 0.85rem;
+  }
+  .textoPublicaciones{
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
   }
 }
