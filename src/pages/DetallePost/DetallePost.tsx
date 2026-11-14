@@ -15,6 +15,7 @@ export default function DetallePost() {
   const [post, setPost] = useState<Post | null>(null);
   const [imagenes, setImagenes] = useState<PostImage[]>([]);
   const [comentarios, setComentarios] = useState<Comment[]>([]);
+  const [likes, setLikes] = useState<Comment[]>([]);
 
   const [cargando, setCargando] = useState(true);
   const [errorCarga, setErrorCarga] = useState("");
