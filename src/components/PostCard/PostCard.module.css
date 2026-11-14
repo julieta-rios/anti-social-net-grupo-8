@@ -130,6 +130,12 @@
   gap: 0.4rem;
   color: #987b94;
   font-size: 0.82rem;
+  text-decoration: none;
+}
+
+.cantidadComentarios:hover {
+  text-decoration: none;
+  color: #913e70;
 }
 
 .cantidadComentarios span {

@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(135deg, #f8d9e8, #d9e5ff);
+  background: linear-gradient(135deg, #f9e8f1, #f3dce9);
 }
 
 .formulario {
@@ -13,36 +13,51 @@
   padding: 40px;
   background-color: white;
   border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgba(80, 35, 75, 0.1);
 }
 
 .formulario h1 {
   text-align: center;
   font-size: 28px;
   font-weight: 700;
-  color: #46345c;
+  color: #49334e;
   margin-bottom: 8px;
 }
 
 .formulario > p {
   text-align: center;
-  color: #777;
+  color: #987b94;
   margin-bottom: 30px;
 }
 
 .formulario label {
   font-weight: 600;
-  color: #46345c;
+  color: #49334e;
+}
+
+.formulario .form-control {
+  border: 1px solid #e8c7da;
+  border-radius: 0.6rem;
+}
+
+.formulario .form-control:focus {
+  border-color: #c77da5;
+  box-shadow: 0 0 0 0.2rem rgba(145, 62, 112, 0.15);
 }
 
 .formulario button {
-  background-color: #8c65b5;
-  border: none;
+  background-color: #913e70;
+  color: #fff;
+  border: 1px solid #913e70;
+  border-radius: 0.6rem;
   padding: 12px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
 }
 
 .formulario button:hover {
-  background-color: #704b99;
+  background-color: #713052;
+  border-color: #713052;
 }
 
 .login {
@@ -52,11 +67,12 @@
 }
 
 .login a {
-  color: #8c65b5;
+  color: #913e70;
   font-weight: 600;
   text-decoration: none;
 }
 
 .login a:hover {
+  color: #713052;
   text-decoration: underline;
 }

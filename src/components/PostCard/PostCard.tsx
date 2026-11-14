@@ -76,11 +76,11 @@ export default function PostCard({
       )}
 
       <div className={styles.piePost}>
-        <span className={styles.cantidadComentarios}>
+        <Link to={`/post/${post.id}`} className={styles.cantidadComentarios}>
           <span aria-hidden="true">💬</span>
           {cantidadComentarios}{" "}
           {cantidadComentarios === 1 ? "comentario" : "comentarios"}
-        </span>
+        </Link>
 
         <Link
           to={`/post/${post.id}`}

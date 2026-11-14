@@ -163,7 +163,7 @@ export default function DetallePost() {
         <div className="alert alert-danger" role="alert">
           {errorCarga || "No se encontró la publicación."}
         </div>
-        <Link to="/" className="btn btn-outline-dark">
+        <Link to="/" className={`btn btn-sm ${styles.botonVolver}`}>
           ← Volver al inicio
         </Link>
       </div>
@@ -173,20 +173,20 @@ export default function DetallePost() {
   return (
     <div className={`container mt-4 ${styles.contenedorDetalle}`}>
       <div className="mb-3">
-        <Link to="/" className="btn btn-sm btn-outline-dark">
-          ← Volver al feed
+        <Link to="/" className={`btn btn-sm ${styles.botonVolver}`}>
+          ← Volver al inicio
         </Link>
       </div>
 
       {/* Tarjeta con el detalle del Post */}
       <article className={`card mb-4 ${styles.tarjetaPrincipal}`}>
-        {imagenes.length > 0 ? (
+        {imagenes.length > 0 && (
           <div className={styles.galeriaImagenes}>
             {imagenes.map((imagen) => (
               <img
                 key={imagen.id}
                 src={imagen.url}
-                alt={`Imagen del post`}
+                alt="Imagen del post"
                 className={styles.imagenDetalle}
                 onError={(event) => {
                   event.currentTarget.src = placeholderPost;
@@ -194,15 +194,8 @@ export default function DetallePost() {
               />
             ))}
           </div>
-        ) : (
-          <div className={styles.galeriaImagenes}>
-            <img
-              src={placeholderPost}
-              alt="Publicación sin imágenes"
-              className={styles.imagenDetalle}
-            />
-          </div>
         )}
+
 
         <div className="card-body p-4">
           <div className="d-flex align-items-center gap-2 mb-3">
@@ -239,7 +232,7 @@ export default function DetallePost() {
           {post.Tags.length > 0 && (
             <div className="d-flex flex-wrap gap-2">
               {post.Tags.map((tag) => (
-                <span key={tag.id} className="badge bg-secondary">
+                <span key={tag.id} className={styles.etiquetaPublicacion}>
                   #{tag.name}
                 </span>
               ))}
@@ -332,7 +325,7 @@ export default function DetallePost() {
             </div>
           )}
 
-          <button type="submit" className="btn btn-dark" disabled={enviando}>
+          <button type="submit" className={`btn ${styles.botonPublicar}`} disabled={enviando}>
             {enviando ? "Publicando..." : "Publicar comentario"}
           </button>
         </form>

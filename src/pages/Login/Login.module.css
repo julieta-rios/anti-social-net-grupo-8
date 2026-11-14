@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(135deg, #f8d9e8, #d9e5ff);
+  background: linear-gradient(135deg, #f9e8f1, #f3dce9);
 }
 
 .formulario {
@@ -13,20 +13,20 @@
   padding: 40px;
   background-color: white;
   border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgba(80, 35, 75, 0.1);
 }
 
 .formulario h1 {
   text-align: center;
   font-size: 28px;
   font-weight: 700;
-  color: #46345c;
+  color: #49334e;
   margin-bottom: 8px;
 }
 
 .formulario > p {
   text-align: center;
-  color: #777;
+  color: #987b94;
   margin-bottom: 30px;
 }
 
@@ -39,27 +39,27 @@
 
 .campo label {
   font-weight: 600;
-  color: #46345c;
+  color: #49334e;
 }
 
 .campo input {
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #e8c7da;
   border-radius: 10px;
   outline: none;
 }
 
 .campo input:focus {
-  border-color: #a77bd1;
-  box-shadow: 0 0 0 3px rgba(167, 123, 209, 0.15);
+  border-color: #c77da5;
+  box-shadow: 0 0 0 3px rgba(145, 62, 112, 0.15);
 }
 
 .formulario button {
   width: 100%;
   padding: 12px;
-  border: none;
+  border: 1px solid #913e70;
   border-radius: 10px;
-  background-color: #8c65b5;
+  background-color: #913e70;
   color: white;
   font-weight: 600;
   cursor: pointer;
@@ -67,7 +67,8 @@
 }
 
 .formulario button:hover {
-  background-color: #704b99;
+  background-color: #713052;
+  border-color: #713052
 }
 
 .formulario button:disabled {
@@ -90,11 +91,12 @@
 }
 
 .registro a {
-  color: #8c65b5;
+  color: #913e70;
   font-weight: 600;
   text-decoration: none;
 }
 
 .registro a:hover {
+  color: #713052;
   text-decoration: underline;
 }

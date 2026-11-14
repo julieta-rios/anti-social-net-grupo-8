@@ -6,12 +6,12 @@
 .tarjetaCrear {
   border: none;
   border-radius: 1rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(80, 35, 75, 0.08);
   background-color: #ffffff;
 }
 
 .tarjetaCrear h1 {
-  color: #2b1055;
+  color: #49334e;
 }
 
 .tarjetaCrear textarea {
@@ -20,21 +20,75 @@
 }
 
 .tarjetaCrear .form-control {
+  border: 1px solid #e8c7da;
   border-radius: 0.6rem;
 }
 
 .tarjetaCrear .form-control:focus {
-  border-color: #7597de;
-  box-shadow: 0 0 0 0.2rem rgba(117, 151, 222, 0.2);
+  border-color: #c77da5;
+  box-shadow: 0 0 0 0.2rem rgba(145, 62, 112, 0.15);
 }
 
 .tarjetaCrear .form-check-input:checked {
-  background-color: #2b1055;
-  border-color: #2b1055;
+  background-color: #913e70;
+  border-color: #913e70;
 }
 
 .tarjetaCrear button[type="submit"] {
+  background-color: #913e70;
+  color: #fff;
+  border: 1px solid #913e70;
   border-radius: 0.6rem;
   padding: 0.7rem;
   font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.tarjetaCrear button[type="submit"]:hover {
+  background-color: #713052;
+  border-color: #713052;
+}
+
+.botonVolver {
+  background-color: #fff;
+  color: #913e70;
+  border: 1px solid #e8c7da;
+  border-radius: 0.6rem;
+  transition: background-color 0.2s ease;
+}
+
+.botonVolver:hover {
+  background-color: #f9e8f1;
+  color: #913e70;
+  border-color: #e8c7da;
+}
+
+.botonAgregarImagen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 40px;
+  border-radius: 0.7rem;
+  padding: 0.55rem 1rem;
+  font-weight: 650;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+  background: #f9e8f1;
+  color: #913e70;
+  border: 1px solid #f0cddd;
+  transition: all 0.2s ease;
+}
+
+.botonAgregarImagen:hover {
+  background: #f0dce9;
+  color: #913e70;
+  border-color: #f0cddd;
+}
+
+.botonAgregarImagen span {
+  margin-right: 0.3rem;
+  font-size: 1.1rem;
 }

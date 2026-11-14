@@ -150,9 +150,9 @@
 }
 
 .botonEditar:hover {
-  background: #913e70;
-  color: #fff;
-  border-color: #913e70;
+  background: #f0dce9;
+  color: #913e70;
+  border-color: #f0cddd;
 }
 
 .botonEditar span {
@@ -238,15 +238,6 @@
   font-size: 1.45rem;
   font-weight: 750;
   margin: 0.2rem 0 0;
-}
-
-.contadorPosts {
-  color: #986b91;
-  background-color: #f8eaf2;
-  border-radius: 2rem;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.8rem;
-  font-weight: 650;
 }
 
 .listaPublicaciones {

@@ -171,8 +171,8 @@ function CrearPost() {
   return (
     <div className={`container mt-4 ${styles.contenedorCrear}`}>
       <div className="mb-3">
-        <Link to="/" className="btn btn-sm btn-outline-dark">
-          Volver al inicio
+        <Link to="/" className={`btn btn-sm ${styles.botonVolver}`}>
+          ← Volver al inicio
         </Link>
       </div>
 
@@ -229,7 +229,7 @@ function CrearPost() {
 
             <button
               type="button"
-              className="btn btn-sm btn-outline-primary mt-2"
+              className={styles.botonAgregarImagen}
               onClick={agregarImagen}
             >
               + Agregar otra imagen

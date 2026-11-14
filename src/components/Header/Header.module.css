@@ -5,10 +5,12 @@
   z-index: 1050;
   position: relative;
 }
+
 .contenedor {
   gap: 1rem;
   position: relative;
 }
+
 .titulo {
   position: absolute;
   left: 50%;
@@ -22,10 +24,12 @@
   user-select: none;
   z-index: 1;
 }
+
 .avatarHeader {
   width: 36px;
   height: 36px;
 }
+
 a.enlace {
   color: #4a4a4a;
   font-weight: 600;
@@ -33,34 +37,51 @@ a.enlace {
   margin: 0 0.5rem;
   transition: color 0.2s ease-in-out;
 }
+
 a.enlace:hover {
   color: #d81b60;
 }
-.menuDesplegable > a {
+
+.menuDesplegable :global(.dropdown-toggle) {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   color: #4a4a4a;
   font-weight: 500;
   font-size: 1.1rem;
+  text-decoration: none;
   transition: color 0.2s ease-in-out;
 }
-.menuDesplegable > a:hover {
+
+.menuDesplegable :global(.dropdown-toggle:hover) {
   color: #d81b60;
 }
+
+.menuDesplegable :global(.dropdown-toggle::after) {
+  margin-left: 4px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
 .menuDesplegable :global(.dropdown-menu) {
   border: none;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   padding: 0.5rem 0;
 }
+
 .itemDesplegable {
   color: #333333;
   font-size: 1rem;
   padding: 0.7rem 1.5rem;
   transition: background-color 0.2s, color 0.2s;
 }
+
 .itemDesplegable:hover {
   background-color: #f8f9fa;
   color: #d81b60;
 }
+
 @media (max-width: 991px) {
   .barraNavegacion {
     padding: 0.8rem 0;
@@ -77,7 +98,7 @@ a.enlace:hover {
   .enlace {
     margin: 0.4rem 0;
   }
-  .menuDesplegable > a {
+  .menuDesplegable :global(.dropdown-toggle) {
     margin: 0.4rem 0;
   }
 }
