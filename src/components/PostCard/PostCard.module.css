@@ -156,6 +156,19 @@
   text-decoration: underline;
 }
 
+.enlaceAutor {
+  color: inherit;
+  text-decoration: none;
+}
+
+.enlaceAutor:hover {
+  color: #913e70;
+}
+
+.enlaceAutor .datosAutor {
+  cursor: pointer;
+}
+
 /* RESPONSIVE */
 
 @media (max-width: 480px) {

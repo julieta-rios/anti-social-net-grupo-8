@@ -23,6 +23,7 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/perfil" element={<Perfil />} />
+          <Route path="/perfil/:userId" element={<Perfil />} />
           <Route path="/crear-post" element={<CrearPost />} />
         </Route>
       </Routes>

@@ -1,8 +1,8 @@
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useUser } from "../../context/UserContext";
 import API_URL from "../../services/api";
-import type { Post, Comment, PostImage } from "../../types";
+import type { Post, Comment, PostImage, User } from "../../types";
 import PostCard from "../../components/PostCard/PostCard";
 import defaultAvatar from "../../assets/default-avatar.jpg";
 import styles from "./Perfil.module.css";
@@ -24,6 +24,11 @@ export default function Perfil() {
     actualizarDescripcion,
   } = useUser();
 
+  const { userId: userIdParam } = useParams();
+  const idPerfil = userIdParam ? Number(userIdParam) : user?.id;
+  const esMiPerfil = !userIdParam || Number(userIdParam) === user?.id;
+  const [usuarioPerfil, setUsuarioPerfil] = useState<User | null>(null);
+
   const [misPosts, setMisPosts] = useState<PostConComentarios[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -31,15 +36,27 @@ export default function Perfil() {
 
   const [urlAvatar, setUrlAvatar] = useState(avatarUrl);
   const [nombreBorrador, setNombreBorrador] = useState(nombreMostrar);
-  const [descripcionBorrador, setDescripcionBorrador] = useState(descripcionPerfil);
+  const [descripcionBorrador, setDescripcionBorrador] =
+    useState(descripcionPerfil);
   const [mostrarEditor, setMostrarEditor] = useState(false);
 
   const userId = user?.id;
 
-  const nombrePerfil = nombreMostrar.trim() || user?.nickName || "Usuario";
+  const nombrePerfil = esMiPerfil
+    ? nombreMostrar.trim() || usuarioPerfil?.nickName || "Usuario"
+    : usuarioPerfil?.nickName || "Usuario";
+
+  const avatarPerfil = esMiPerfil
+    ? avatarUrl
+    : localStorage.getItem(`avatar-${idPerfil}`) || defaultAvatar;
+
+  const descripcionMostrar = esMiPerfil
+    ? descripcionPerfil.trim() ||
+      "Un espacio para compartir ideas, intereses y experiencias."
+    : localStorage.getItem(`descripcion-${idPerfil}`) 
 
   useEffect(() => {
-    const cargarMisPosts = async () => {
+    const cargarPerfil = async () => {
       if (!userId) {
         setCargando(false);
         return;
@@ -49,25 +66,36 @@ export default function Perfil() {
         setCargando(true);
         setError("");
 
-        const response = await fetch(`${API_URL}/posts`);
+        let datosUsuario: User;
 
-          if (!response.ok) {
-            throw new Error("No se pudieron cargar tus publicaciones.");
+        if (esMiPerfil && user) {
+          datosUsuario = user;
+        } else {
+          const responseUsuario = await fetch(`${API_URL}/users/${idPerfil}`);
+
+          if (!responseUsuario.ok) {
+            throw new Error("No se encontró el usuario.");
           }
 
-          const dataPosts: Post[] = await response.json();
+          datosUsuario = await responseUsuario.json();
+        }
 
-          console.log("Usuario logueado:", userId); //
-          console.log("Publicaciones recibidas:", dataPosts); //
+        setUsuarioPerfil(datosUsuario);
 
-          const misPublicaciones = dataPosts.filter(
-            (post) => post.UserId === userId
-          );
-          
-          console.log("Mis publicaciones filtradas:", misPublicaciones); //
+        const responsePosts = await fetch(`${API_URL}/posts`);
+
+        if (!responsePosts.ok) {
+          throw new Error("No se pudieron cargar las publicaciones.");
+        }
+
+        const dataPosts: Post[] = await responsePosts.json();
+
+        const publicacionesUsuario = dataPosts.filter(
+          (post) => post.UserId === idPerfil,
+        );
 
         const postsEnriquecidos = await Promise.all(
-          misPublicaciones.map(async (post) => {
+          publicacionesUsuario.map(async (post) => {
             let cantidadComentarios = 0;
             let imagen: string | undefined;
 
@@ -87,10 +115,7 @@ export default function Perfil() {
                 imagen = imagenes[0]?.url;
               }
             } catch (error) {
-              console.error(
-                "Error al cargar datos de la publicación:",
-                error
-              );
+              console.error("Error al cargar datos de la publicación:", error);
             }
 
             return {
@@ -98,20 +123,20 @@ export default function Perfil() {
               cantidadComentarios,
               imagen,
             };
-          })
+          }),
         );
 
         setMisPosts(postsEnriquecidos);
       } catch (error) {
         console.error(error);
-        setError("Ocurrió un error al obtener tus publicaciones.");
+        setError("No se pudo cargar el perfil.");
       } finally {
         setCargando(false);
       }
     };
 
-    cargarMisPosts();
-  }, [userId]);
+    cargarPerfil();
+  }, [idPerfil, esMiPerfil, user]);
 
   useEffect(() => {
     setUrlAvatar(avatarUrl);
@@ -163,7 +188,7 @@ export default function Perfil() {
 
   const totalComentarios = misPosts.reduce(
     (total, post) => total + post.cantidadComentarios,
-    0
+    0,
   );
 
   console.log("Publicaciones guardadas en el estado:", misPosts);
@@ -186,7 +211,9 @@ export default function Perfil() {
     <main className={`container ${styles.contenedorPerfil}`}>
       <section className={styles.tarjetaPerfil}>
         <div className={styles.portadaPerfil}>
-          <span className={styles.detallePortada}>TU ESPACIO</span>
+          <span className={styles.detallePortada}>
+            {esMiPerfil ? "TU ESPACIO" : "PERFIL DE USUARIO"}
+          </span>
           <span className={styles.decoracionPortada}>✦</span>
         </div>
 
@@ -194,7 +221,7 @@ export default function Perfil() {
           <div className={styles.encabezadoPerfil}>
             <div className={styles.identidadPerfil}>
               <img
-                src={avatarUrl || defaultAvatar}
+                src={avatarPerfil}
                 alt="Avatar de perfil"
                 className={styles.avatarPerfil}
                 onError={(event) => {
@@ -204,31 +231,37 @@ export default function Perfil() {
 
               <div className={styles.datosUsuario}>
                 <h1>{nombrePerfil}</h1>
-                <p>@{user?.nickName}</p>
+                <p>@{usuarioPerfil?.nickName}</p>
               </div>
             </div>
-          <div className={styles.accionesPerfil}>
-            <button
-              type="button"
-              className={styles.botonEditar}
-              onClick={abrirEditor}
-            >
-              <span aria-hidden="true">✎</span> Editar perfil
-            </button>
+            <div className={styles.accionesPerfil}>
+              {esMiPerfil && (
+                <div className={styles.accionesPerfil}>
+                  <button
+                    type="button"
+                    className={styles.botonEditar}
+                    onClick={abrirEditor}
+                  >
+                    <span aria-hidden="true">✎</span> Editar perfil
+                  </button>
 
-            <Link to="/crear-post" className={styles.botonCrear}>
-            + Crear publicación </Link>
-            <button type="button" className={styles.botonCerrarSesion} onClick={handleLogout}>
-              Cerrar Sesión 
-            </button>
-          </div>
-           
+                  <Link to="/crear-post" className={styles.botonCrear}>
+                    + Crear publicación
+                  </Link>
+
+                  <button
+                    type="button"
+                    className={styles.botonCerrarSesion}
+                    onClick={handleLogout}
+                  >
+                    Cerrar Sesión
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
-          <p className={styles.descripcionPerfil}>
-            {descripcionPerfil.trim() ||
-              "Un espacio para compartir ideas, intereses y experiencias."}
-          </p>
+          <p className={styles.descripcionPerfil}>{descripcionMostrar}</p>
 
           <div className={styles.estadisticasPerfil}>
             <div>
@@ -244,11 +277,8 @@ export default function Perfil() {
         </div>
       </section>
 
-      {mostrarEditor && (
-        <div
-          className={styles.modalOverlay}
-          onClick={cerrarEditor}
-        >
+      {esMiPerfil && mostrarEditor && (
+        <div className={styles.modalOverlay} onClick={cerrarEditor}>
           <div
             className={styles.modalEditar}
             role="dialog"
@@ -280,9 +310,7 @@ export default function Perfil() {
                   }}
                 />
 
-                <strong>
-                  {nombreBorrador.trim() || user?.nickName}
-                </strong>
+                <strong>{nombreBorrador.trim() || user?.nickName}</strong>
 
                 <span>@{user?.nickName}</span>
               </div>
@@ -302,9 +330,7 @@ export default function Perfil() {
                   placeholder="¿Cómo querés que te llamen?"
                   maxLength={40}
                   value={nombreBorrador}
-                  onChange={(event) =>
-                    setNombreBorrador(event.target.value)
-                  }
+                  onChange={(event) => setNombreBorrador(event.target.value)}
                 />
 
                 <small className="text-muted">
@@ -339,10 +365,7 @@ export default function Perfil() {
               </div>
 
               <div>
-                <label
-                  htmlFor="avatar"
-                  className="form-label fw-semibold"
-                >
+                <label htmlFor="avatar" className="form-label fw-semibold">
                   Foto de perfil
                 </label>
 
@@ -394,8 +417,8 @@ export default function Perfil() {
       <section className={styles.seccionPublicaciones}>
         <div className={styles.tituloPublicaciones}>
           <div>
-            <span>MÁS DE VOS</span>
-            <h2>Mis publicaciones</h2>
+            <span>{esMiPerfil ? "MÁS DE VOS" : "SU ACTIVIDAD"}</span>
+            <h2>{esMiPerfil ? "Mis publicaciones" : "Publicaciones"}</h2>
           </div>
         </div>
 
@@ -415,10 +438,15 @@ export default function Perfil() {
         {!cargando && !error && misPosts.length === 0 && (
           <div className={styles.estadoVacio}>
             <span className={styles.iconoVacio}>✧</span>
-            <h3>Tu espacio está esperando</h3>
+            <h3>
+              {esMiPerfil
+                ? "Tu espacio está esperando"
+                : "Todavía no hay publicaciones"}
+            </h3>
             <p>
-              Todavía no realizaste ninguna publicación. ¡Animate a compartir
-              algo con la comunidad!
+              {esMiPerfil
+                ? "Todavía no realizaste ninguna publicación. ¡Animate a compartir algo con la comunidad!"
+                : "Este usuario todavía no realizó publicaciones."}
             </p>
           </div>
         )}

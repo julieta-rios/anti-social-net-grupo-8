@@ -10,11 +10,12 @@ import styles from "./DetallePost.module.css";
 
 export default function DetallePost() {
   const { id } = useParams<{ id: string }>();
-  const { user, avatarUrl } = useUser();
+  const { user, avatarUrl, nombreMostrar } = useUser();
 
   const [post, setPost] = useState<Post | null>(null);
   const [imagenes, setImagenes] = useState<PostImage[]>([]);
   const [comentarios, setComentarios] = useState<Comment[]>([]);
+  const [likes, setLikes] = useState<Comment[]>([]);
 
   const [cargando, setCargando] = useState(true);
   const [errorCarga, setErrorCarga] = useState("");
@@ -25,6 +26,15 @@ export default function DetallePost() {
   const [mensajeExito, setMensajeExito] = useState("");
   const [enviando, setEnviando] = useState(false);
 
+  // Obtiene el nombre elegido por el usuario o, si no existe, su nickname
+  const obtenerNombreUsuario = (userId: number, nickName: string) => {
+    if (user?.id === userId) {
+      return nombreMostrar.trim() || nickName;
+    }
+
+    return localStorage.getItem(`nombre-${userId}`)?.trim() || nickName;
+  };
+
   useEffect(() => {
     const cargarDetalle = async () => {
       if (!id) {
@@ -32,6 +42,7 @@ export default function DetallePost() {
         setCargando(false);
         return;
       }
+
       try {
         setCargando(true);
         setErrorCarga("");
@@ -122,7 +133,7 @@ export default function DetallePost() {
       setNuevoComentario("");
       setMensajeExito("¡Comentario publicado con éxito!");
 
-      //se intenta actualizar la lista
+      // Se intenta actualizar la lista
       try {
         const resComentarios = await fetch(`${API_URL}/comments/post/${id}`);
 
@@ -169,6 +180,8 @@ export default function DetallePost() {
     );
   }
 
+  const nombreAutor = obtenerNombreUsuario(post.UserId, post.User.nickName);
+
   return (
     <div className={`container mt-4 ${styles.contenedorDetalle}`}>
       <div className="mb-3">
@@ -195,34 +208,43 @@ export default function DetallePost() {
           </div>
         )}
 
-
         <div className="card-body p-4">
-          <div className="d-flex align-items-center gap-2 mb-3">
-            <img
-              src={
-                Number(
-                  localStorage.getItem("user")
-                    ? JSON.parse(localStorage.getItem("user")!).id ===
-                        post.UserId
-                    : false,
-                )
-                  ? avatarUrl || defaultAvatar
-                  : localStorage.getItem(`avatar-${post.UserId}`) ||
-                    defaultAvatar
-              }
-              alt="Avatar del autor"
-              className={styles.avatar}
-              onError={(event) => {
-                event.currentTarget.src = defaultAvatar;
-              }}
-            />
-            <div>
-              <h2 className="h6 m-0 fw-bold">@{post.User.nickName}</h2>
+          <div className="mb-3">
+            <div className="d-flex align-items-center gap-2">
+              <Link
+                to={`/perfil/${post.UserId}`}
+                className={styles.enlaceAutor}
+                aria-label={`Ver perfil de ${post.User.nickName}`}
+              >
+                <img
+                  src={
+                    user?.id === post.UserId
+                      ? avatarUrl || defaultAvatar
+                      : localStorage.getItem(`avatar-${post.UserId}`) ||
+                        defaultAvatar
+                  }
+                  alt={`Avatar de ${post.User.nickName}`}
+                  className={styles.avatar}
+                  onError={(event) => {
+                    event.currentTarget.src = defaultAvatar;
+                  }}
+                />
+              </Link>
 
-              <small className="text-muted">
-                {new Date(post.createdAt).toLocaleDateString()}
-              </small>
+              <div className="d-flex flex-column justify-content-center">
+                <Link
+                  to={`/perfil/${post.UserId}`}
+                  className={styles.enlaceAutor}
+                >
+                  <strong className="d-block">{nombreAutor}</strong>
+                  <small className="text-muted">@{post.User.nickName}</small>
+                </Link>
+              </div>
             </div>
+
+            <small className="text-muted d-block mt-1">
+              {new Date(post.createdAt).toLocaleDateString()}
+            </small>
           </div>
 
           <p className="fs-5 mb-3">{post.description}</p>
@@ -243,6 +265,7 @@ export default function DetallePost() {
       {/* Sección de Comentarios */}
       <section className="mb-4">
         <h3 className="h5 fw-bold mb-3">Comentarios ({comentarios.length})</h3>
+
         {comentarios.length === 0 ? (
           <div className="alert alert-light border text-muted">
             Todavía no hay comentarios en esta publicación. ¡Sé el primero en
@@ -263,14 +286,24 @@ export default function DetallePost() {
                         : localStorage.getItem(`avatar-${comentario.UserId}`) ||
                           defaultAvatar
                     }
-                    alt="Avatar del usuario"
+                    alt={`Avatar de ${comentario.User.nickName}`}
                     className={styles.avatarComentario}
                     onError={(event) => {
                       event.currentTarget.src = defaultAvatar;
                     }}
                   />
 
-                  <strong className="small">@{comentario.User.nickName}</strong>
+                  <div className="d-flex flex-column justify-content-center">
+                    <strong className="small">
+                      {obtenerNombreUsuario(
+                        comentario.UserId,
+                        comentario.User.nickName,
+                      )}
+                    </strong>
+                    <small className="text-muted">
+                      @{comentario.User.nickName}
+                    </small>
+                  </div>
                 </div>
 
                 <p className="mb-1 text-dark">{comentario.content}</p>
@@ -324,7 +357,11 @@ export default function DetallePost() {
             </div>
           )}
 
-          <button type="submit" className={`btn ${styles.botonPublicar}`} disabled={enviando}>
+          <button
+            type="submit"
+            className={`btn ${styles.botonPublicar}`}
+            disabled={enviando}
+          >
             {enviando ? "Publicando..." : "Publicar comentario"}
           </button>
         </form>

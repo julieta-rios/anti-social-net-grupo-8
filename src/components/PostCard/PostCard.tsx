@@ -34,16 +34,27 @@ export default function PostCard({
   return (
     <article className={styles.postCard}>
       <div className={styles.encabezadoPost}>
-        <Avatar
-          src={avatarAutor || defaultAvatar}
-          alt={`Avatar de ${post.User.nickName}`}
-          className={styles.avatarPost}
-        />
+        <Link
+          to={`/perfil/${post.UserId}`}
+          className={styles.enlaceAutor}
+          aria-label={`Visitar perfil de ${post.User.nickName}`}
+        >
+          <Avatar
+            src={avatarAutor || defaultAvatar}
+            alt={`Avatar de ${post.User.nickName}`}
+            className={styles.avatarPost}
+          />
+        </Link>
 
-        <div className={styles.datosAutor}>
-          <strong>{nombreAutor}</strong>
-          <span>@{post.User.nickName}</span>
-        </div>
+        <Link
+          to={`/perfil/${post.UserId}`}
+          className={styles.enlaceAutor}
+        >
+          <div className={styles.datosAutor}>
+            <strong>{nombreAutor}</strong>
+            <span>@{post.User.nickName}</span>
+          </div>
+        </Link>
       </div>
 
       <div className={styles.contenidoPost}>
