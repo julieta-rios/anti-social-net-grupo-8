@@ -1,23 +1,23 @@
 import { Link } from "react-router";
-import type { Post } from "../../types";
+import type { Post, PostImage } from "../../types";
 import { useUser } from "../../context/UserContext";
 import Avatar from "../Avatar/Avatar";
+import Carousel from "../Carousel/Carousel";
 import defaultAvatar from "../../assets/default-avatar.jpg";
 import styles from "./PostCard.module.css";
 
 interface PostCardProps {
   post: Post;
   cantidadComentarios: number;
-  imagen?: string;
+  imagenes: PostImage[];
 }
 
 export default function PostCard({
   post,
   cantidadComentarios,
-  imagen,
+  imagenes = [],
 }: PostCardProps) {
   const { user, avatarUrl, nombreMostrar } = useUser();
-  const tieneImagen = Boolean(imagen?.trim());
 
   // recupera el avatar correspondiente al autor del post
   const avatarAutor =
@@ -46,10 +46,7 @@ export default function PostCard({
           />
         </Link>
 
-        <Link
-          to={`/perfil/${post.UserId}`}
-          className={styles.enlaceAutor}
-        >
+        <Link to={`/perfil/${post.UserId}`} className={styles.enlaceAutor}>
           <div className={styles.datosAutor}>
             <strong>{nombreAutor}</strong>
             <span>@{post.User.nickName}</span>
@@ -58,9 +55,7 @@ export default function PostCard({
       </div>
 
       <div className={styles.contenidoPost}>
-        <p className={styles.descripcionPost}>
-          {post.description}
-        </p>
+        <p className={styles.descripcionPost}>{post.description}</p>
 
         {post.Tags.length > 0 && (
           <div className={styles.listaTags}>
@@ -73,16 +68,9 @@ export default function PostCard({
         )}
       </div>
 
-      {tieneImagen && (
+      {imagenes.length > 0 && (
         <div className={styles.contenedorImagen}>
-          <img
-            src={imagen}
-            alt="Imagen de la publicación"
-            className={styles.imagenPost}
-            onError={(event) => {
-              event.currentTarget.style.display = "none";
-            }}
-          />
+          <Carousel imagenes={imagenes} />
         </div>
       )}
 
@@ -93,10 +81,7 @@ export default function PostCard({
           {cantidadComentarios === 1 ? "comentario" : "comentarios"}
         </Link>
 
-        <Link
-          to={`/post/${post.id}`}
-          className={styles.botonVerMas}
-        >
+        <Link to={`/post/${post.id}`} className={styles.botonVerMas}>
           Ver publicación
           <span aria-hidden="true"> →</span>
         </Link>

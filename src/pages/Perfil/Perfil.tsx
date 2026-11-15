@@ -9,7 +9,7 @@ import styles from "./Perfil.module.css";
 
 interface PostConComentarios extends Post {
   cantidadComentarios: number;
-  imagen?: string;
+  imagenesCargadas: PostImage[];
 }
 
 export default function Perfil() {
@@ -47,7 +47,7 @@ export default function Perfil() {
     : usuarioPerfil?.nickName || "Usuario";
 
   const avatarPerfil = esMiPerfil
-    ? avatarUrl
+    ? avatarUrl || defaultAvatar
     : localStorage.getItem(`avatar-${idPerfil}`) || defaultAvatar;
 
   const descripcionMostrar = esMiPerfil
@@ -97,7 +97,7 @@ export default function Perfil() {
         const postsEnriquecidos = await Promise.all(
           publicacionesUsuario.map(async (post) => {
             let cantidadComentarios = 0;
-            let imagen: string | undefined;
+            let imagenesCargadas: PostImage[] = [];
 
             try {
               const [resCom, resImg] = await Promise.all([
@@ -111,8 +111,7 @@ export default function Perfil() {
               }
 
               if (resImg.ok) {
-                const imagenes: PostImage[] = await resImg.json();
-                imagen = imagenes[0]?.url;
+                imagenesCargadas = await resImg.json();
               }
             } catch (error) {
               console.error("Error al cargar datos de la publicación:", error);
@@ -121,7 +120,7 @@ export default function Perfil() {
             return {
               ...post,
               cantidadComentarios,
-              imagen,
+              imagenesCargadas,
             };
           }),
         );
@@ -458,7 +457,7 @@ export default function Perfil() {
                 <PostCard
                   post={post}
                   cantidadComentarios={post.cantidadComentarios}
-                  imagen={post.imagen}
+                  imagenes={post.imagenesCargadas}
                 />
               </div>
             ))}
