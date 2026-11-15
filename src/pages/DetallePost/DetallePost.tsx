@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useParams } from "react-router";
 import { useUser } from "../../context/UserContext";
+import Carousel from "../../components/Carousel/Carousel";
 import API_URL from "../../services/api";
 import type { Post, Comment, PostImage } from "../../types";
-import placeholderPost from "../../assets/placeholder-post.png";
 import defaultAvatar from "../../assets/default-avatar.jpg";
 import styles from "./DetallePost.module.css";
 
@@ -194,17 +194,7 @@ export default function DetallePost() {
       <article className={`card mb-4 ${styles.tarjetaPrincipal}`}>
         {imagenes.length > 0 && (
           <div className={styles.galeriaImagenes}>
-            {imagenes.map((imagen) => (
-              <img
-                key={imagen.id}
-                src={imagen.url}
-                alt="Imagen del post"
-                className={styles.imagenDetalle}
-                onError={(event) => {
-                  event.currentTarget.src = placeholderPost;
-                }}
-              />
-            ))}
+            <Carousel imagenes={imagenes} />
           </div>
         )}
 
