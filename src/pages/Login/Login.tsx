@@ -34,7 +34,7 @@ export default function Login() {
     setError("");
 
     if (!formData.nickName.trim() || !formData.password.trim()) {
-      setError("Por favor, completá todos los campos requeridos");
+      setError("Completá los campos requeridos");
       return;
     }
 

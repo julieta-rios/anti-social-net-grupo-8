@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router";
 import API_URL from "../../services/api";
 import { validate } from "../../utils/validacionesRegistro";
 import type { ErroresRegistro } from "../../utils/validacionesRegistro";
-import logo from "../../assets/logo.png";
+import icono from "../../assets/icono.png";
 import styles from "./Registro.module.css";
 
 const datosIniciales = {
@@ -94,85 +94,87 @@ export default function Registro() {
 
   return (
     <div className={styles.contenedorRegistro}>
-      <form className={styles.formulario} onSubmit={handleSubmit} noValidate>
-        <div className="text-center mb-3">
-          <img
-            src={logo}
-            alt="UnaHur Anti-Social Net"
-            style={{ maxHeight: "65px", width: "auto" }}
-          />
-        </div>
+      <div className={styles.ladoIzquierdo}>
+        <img
+          src={icono}
+          alt="UnaHur Anti-Social Net"
+          className={styles.iconoPrincipal}
+        />
+        <span className={styles.tituloRegistro}>antisocial_net</span>
+      </div>
 
-        <h1>¡Sumate a la comunidad!</h1>
-        <p>Creá tu cuenta para empezar a compartir</p>
+      <div className={styles.ladoDerecho}>
+        <form className={styles.formulario} onSubmit={handleSubmit} noValidate>
+          <p>creá tu cuenta</p>
 
-        <div className="mb-3">
-          <label htmlFor="nickName" className="form-label">
-            Nombre de usuario
-          </label>
+          <div className="mb-3">
+            <label htmlFor="nickName" className="form-label">
+              Nombre de usuario
+            </label>
 
-          <input
-            type="text"
-            id="nickName"
-            name="nickName"
-            className={`form-control ${errors.nickName ? "is-invalid" : ""}`}
-            value={formData.nickName}
-            onChange={handleChange}
-            placeholder="Elegí tu nickName"
-            disabled={procesando}
-            required
-          />
-          {errors.nickName && (
-            <div className="invalid-feedback">{errors.nickName}</div>
-          )}
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Correo electrónico
-          </label>
-
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className={`form-control ${errors.email ? "is-invalid" : ""}`}
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="ejemplo@correo.com"
-            disabled={procesando}
-            required
-          />
-
-          {errors.email && (
-            <div className="invalid-feedback">{errors.email}</div>
-          )}
-        </div>
-
-        {errorServidor && (
-          <div className="alert alert-danger" role="alert">
-            {errorServidor}
+            <input
+              type="text"
+              id="nickName"
+              name="nickName"
+              className={`form-control ${errors.nickName ? "is-invalid" : ""}`}
+              value={formData.nickName}
+              onChange={handleChange}
+              placeholder="elegí tu usuario"
+              disabled={procesando}
+              required
+            />
+            {errors.nickName && (
+              <div className="invalid-feedback">{errors.nickName}</div>
+            )}
           </div>
-        )}
 
-        {mensaje && (
-          <div className="alert alert-success" role="alert">
-            {mensaje}
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">
+              Correo electrónico
+            </label>
+
+            <input
+              type="email"
+              id="email"
+              name="email"
+              className={`form-control ${errors.email ? "is-invalid" : ""}`}
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="tucorreo@gmail.com"
+              disabled={procesando}
+              required
+            />
+
+            {errors.email && (
+              <div className="invalid-feedback">{errors.email}</div>
+            )}
           </div>
-        )}
 
-        <button
-          type="submit"
-          className="btn btn-dark w-100"
-          disabled={procesando}
-        >
-          {procesando ? "Creando cuenta..." : "Registrarme"}
-        </button>
+          {errorServidor && (
+            <div className="alert alert-danger" role="alert">
+              {errorServidor}
+            </div>
+          )}
 
-        <p className={styles.login}>
-          ¿Ya tenés cuenta? <Link to="/login">Iniciá sesión</Link>
-        </p>
-      </form>
+          {mensaje && (
+            <div className="alert alert-success" role="alert">
+              {mensaje}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="btn btn-dark w-100"
+            disabled={procesando}
+          >
+            {procesando ? "Creando cuenta..." : "Registrarme"}
+          </button>
+
+          <p className={styles.login}>
+            ¿Ya tenés cuenta? <Link to="/login">Iniciá sesión</Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }
