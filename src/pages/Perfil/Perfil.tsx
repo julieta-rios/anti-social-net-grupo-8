@@ -53,7 +53,8 @@ export default function Perfil() {
   const descripcionMostrar = esMiPerfil
     ? descripcionPerfil.trim() ||
       "Un espacio para compartir ideas, intereses y experiencias."
-    : localStorage.getItem(`descripcion-${idPerfil}`) 
+    : localStorage.getItem(`descripcion-${idPerfil}`)?.trim() ||
+      "Un espacio para compartir ideas, intereses y experiencias.";
 
   useEffect(() => {
     const cargarPerfil = async () => {

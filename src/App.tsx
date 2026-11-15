@@ -6,6 +6,7 @@ import DetallePost from "./pages/DetallePost/DetallePost";
 import Perfil from "./pages/Perfil/Perfil";
 import CrearPost from "./pages/CrearPost/CrearPost";
 import Header from "./components/Header/Header";
+import ScrollToTop from "./components/ScrollToTop"
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
   return (
     <>
       {!["/login", "/registro"].includes(location.pathname) && <Header />}
-
+      <ScrollToTop/>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />

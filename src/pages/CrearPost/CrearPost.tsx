@@ -159,9 +159,7 @@ function CrearPost() {
     } catch (error) {
       console.error(error);
       setError(
-        error instanceof Error
-          ? error.message
-          : "Ocurrió un error al crear la publicación.",
+        "Ocurrió un error al publicar. Intentá nuevamente",
       );
     } finally {
       setProcesando(false);
@@ -278,7 +276,7 @@ function CrearPost() {
             className="btn btn-dark w-100"
             disabled={procesando || cargandoTags}
           >
-            {procesando ? "Publicando..." : "Crear publicación"}
+            {procesando ? "Publicando..." : "Publicar"}
           </button>
         </form>
       </div>

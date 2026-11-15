@@ -322,7 +322,7 @@ export default function Home() {
           </div>
         </div>
         <div className="col-lg-4">
-          <div className="d-flex flex-column align-item center justify-content-center gap-3">
+          <div className="d-flex flex-column align-item-center justify-content-center gap-3">
             <SuggestedUsers
               usuarios={usuariosSugeridos}
               onToggleSeguir={handleToggleSeguirSugerido}

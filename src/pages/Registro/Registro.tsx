@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router";
 import API_URL from "../../services/api";
 import { validate } from "../../utils/validacionesRegistro";
 import type { ErroresRegistro } from "../../utils/validacionesRegistro";
-import icono from "../../assets/icono.png";
+import AuthLayout from "../../components/AuthLayout/AuthLayout";
 import styles from "./Registro.module.css";
 
 const datosIniciales = {
@@ -69,7 +69,7 @@ export default function Registro() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "No se pudo crear el usuario",
+          data.message || data.error || "No se pudo crear el usuario.",
         );
       }
 
@@ -81,100 +81,84 @@ export default function Registro() {
       }, 1500);
     } catch (error) {
       console.error(error);
-
-      setErrorServidor(
-        error instanceof Error
-          ? error.message
-          : "Ocurrió un error al registrarse",
-      );
+      setErrorServidor("Ocurrió un error al registrarse. Intentá nuevamente.");
     } finally {
       setProcesando(false);
     }
   };
 
   return (
-    <div className={styles.contenedorRegistro}>
-      <div className={styles.ladoIzquierdo}>
-        <img
-          src={icono}
-          alt="UnaHur Anti-Social Net"
-          className={styles.iconoPrincipal}
-        />
-        <span className={styles.tituloRegistro}>antisocial_net</span>
-      </div>
+    <AuthLayout>
+      <form className={styles.formulario} onSubmit={handleSubmit} noValidate>
+        <p>Creá tu cuenta</p>
 
-      <div className={styles.ladoDerecho}>
-        <form className={styles.formulario} onSubmit={handleSubmit} noValidate>
-          <p>creá tu cuenta</p>
+        <div className="mb-3">
+          <label htmlFor="nickName" className="form-label">
+            Nombre de usuario
+          </label>
 
-          <div className="mb-3">
-            <label htmlFor="nickName" className="form-label">
-              Nombre de usuario
-            </label>
-
-            <input
-              type="text"
-              id="nickName"
-              name="nickName"
-              className={`form-control ${errors.nickName ? "is-invalid" : ""}`}
-              value={formData.nickName}
-              onChange={handleChange}
-              placeholder="elegí tu usuario"
-              disabled={procesando}
-              required
-            />
-            {errors.nickName && (
-              <div className="invalid-feedback">{errors.nickName}</div>
-            )}
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">
-              Correo electrónico
-            </label>
-
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className={`form-control ${errors.email ? "is-invalid" : ""}`}
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="tucorreo@gmail.com"
-              disabled={procesando}
-              required
-            />
-
-            {errors.email && (
-              <div className="invalid-feedback">{errors.email}</div>
-            )}
-          </div>
-
-          {errorServidor && (
-            <div className="alert alert-danger" role="alert">
-              {errorServidor}
-            </div>
-          )}
-
-          {mensaje && (
-            <div className="alert alert-success" role="alert">
-              {mensaje}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className="btn btn-dark w-100"
+          <input
+            type="text"
+            id="nickName"
+            name="nickName"
+            className={`form-control ${errors.nickName ? "is-invalid" : ""}`}
+            value={formData.nickName}
+            onChange={handleChange}
+            placeholder="Elegí tu usuario"
             disabled={procesando}
-          >
-            {procesando ? "Creando cuenta..." : "Registrarme"}
-          </button>
+            required
+          />
+          {errors.nickName && (
+            <div className="invalid-feedback">{errors.nickName}</div>
+          )}
+        </div>
 
-          <p className={styles.login}>
-            ¿Ya tenés cuenta? <Link to="/login">Iniciá sesión</Link>
-          </p>
-        </form>
-      </div>
-    </div>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">
+            Correo electrónico
+          </label>
+
+          <input
+            type="email"
+            id="email"
+            name="email"
+            className={`form-control ${errors.email ? "is-invalid" : ""}`}
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="tucorreo@gmail.com"
+            disabled={procesando}
+            required
+          />
+
+          {errors.email && (
+            <div className="invalid-feedback">{errors.email}</div>
+          )}
+        </div>
+
+        {errorServidor && (
+          <div className="alert alert-danger" role="alert">
+            {errorServidor}
+          </div>
+        )}
+
+        {mensaje && (
+          <div className="alert alert-success" role="alert">
+            {mensaje}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          className="btn btn-dark w-100"
+          disabled={procesando}
+        >
+          {procesando ? "Creando cuenta..." : "Registrarme"}
+        </button>
+
+        <p className={styles.login}>
+          ¿Ya tenés cuenta? <Link to="/login">Iniciá sesión</Link>
+        </p>
+      </form>
+    </AuthLayout>
   );
 }

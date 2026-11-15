@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -12,29 +13,73 @@ function Header() {
   const { user, logout, avatarUrl, nombreMostrar } = useUser();
   const navigate = useNavigate();
 
+  const [expanded, setExpanded] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  const cerrarMenu = () => setExpanded(false);
+
+  useEffect(() => {
+    const handleClickFuera = (event: MouseEvent) => {
+      if (
+        headerRef.current &&
+        !headerRef.current.contains(event.target as Node)
+      ) {
+        cerrarMenu();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickFuera);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickFuera);
+    };
+  }, []);
+
   const handleLogout = () => {
+    cerrarMenu();
     logout();
     navigate("/login");
   };
 
   return (
-    <Navbar expand="lg" className={styles.barraNavegacion}>
+    <Navbar
+      expand="lg"
+      expanded={expanded}
+      onToggle={setExpanded}
+      className={styles.barraNavegacion}
+      ref={headerRef}
+    >
       <Container className={styles.contenedor}>
-              <Nav.Link as={Link} to="/" className={styles.titulo}>
-              antisocial_net
-            </Nav.Link>
+        <Nav.Link
+          as={Link}
+          to="/"
+          className={styles.titulo}
+          onClick={cerrarMenu}
+        >
+          antisocial_net
+        </Nav.Link>
         <Navbar.Toggle
           aria-controls="basic-navbar-nav"
           aria-label="Abrir menú de navegación"
         />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto align-items-center">
-            <Nav.Link as={Link} to="/" className={styles.enlace}>
+            <Nav.Link
+              as={Link}
+              to="/"
+              className={styles.enlace}
+              onClick={cerrarMenu}
+            >
               Inicio
             </Nav.Link>
 
             {user && (
-              <Nav.Link as={Link} to="/crear-post" className={styles.enlace}>
+              <Nav.Link
+                as={Link}
+                to="/crear-post"
+                className={styles.enlace}
+                onClick={cerrarMenu}
+              >
                 Crear publicación
               </Nav.Link>
             )}
@@ -60,6 +105,7 @@ function Header() {
                   as={Link}
                   to="/perfil"
                   className={styles.itemDesplegable}
+                  onClick={cerrarMenu}
                 >
                   Mi perfil
                 </NavDropdown.Item>
@@ -75,11 +121,21 @@ function Header() {
               </NavDropdown>
             ) : (
               <>
-                <Nav.Link as={Link} to="/login" className={styles.enlace}>
+                <Nav.Link
+                  as={Link}
+                  to="/login"
+                  className={styles.enlace}
+                  onClick={cerrarMenu}
+                >
                   Iniciar sesión
                 </Nav.Link>
 
-                <Nav.Link as={Link} to="/registro" className={styles.enlace}>
+                <Nav.Link
+                  as={Link}
+                  to="/registro"
+                  className={styles.enlace}
+                  onClick={cerrarMenu}
+                >
                   Registrarse
                 </Nav.Link>
               </>
