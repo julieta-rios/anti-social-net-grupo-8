@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router";
 import { useUser } from "../../context/UserContext";
 import API_URL from "../../services/api";
 import type { User } from "../../types";
-import logo from "../../assets/logo.png";
+import icono from "../../assets/icono.png";
 import styles from "./Login.module.css";
 
 const datosIniciales = {
@@ -77,71 +77,71 @@ export default function Login() {
 
   return (
     <div className={styles.contenedorLogin}>
-      <form className={styles.formulario} onSubmit={handleSubmit} noValidate>
-        <div className="text-center mb-3">
-          <img
-            src={logo}
-            alt="UnaHur Anti-Social Net"
-            style={{ maxHeight: "65px", width: "auto" }}
-            onError={(e) => (e.currentTarget.style.display = "none")}
-          />
-        </div>
+      <div className={styles.ladoIzquierdo}>
+        <img
+          src={icono}
+          alt="UnaHur Anti-Social Net"
+          className={styles.iconoPrincipal}
+        />
+        <span className={styles.tituloLogin}>antisocial_net</span>
+      </div>
+      <div className={styles.ladoDerecho}>
+        <form className={styles.formulario} onSubmit={handleSubmit} noValidate>
+          <p>iniciá sesión para continuar</p>
 
-        <h1>¡Hola de nuevo!</h1>
-        <p>Iniciá sesión para continuar</p>
-
-        <div className="mb-3">
-          <label htmlFor="nickName" className="form-label">
-            Nombre de usuario
-          </label>
-          <input
-            type="text"
-            id="nickName"
-            name="nickName"
-            className="form-control"
-            value={formData.nickName}
-            onChange={handleChange}
-            placeholder="Ingresá tu nickName"
-            disabled={procesando}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Contraseña
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            className="form-control"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Ingresá tu contraseña"
-            disabled={procesando}
-            required
-          />
-        </div>
-
-        {error && (
-          <div className="alert alert-danger" role="alert">
-            {error}
+          <div className="mb-3">
+            <label htmlFor="nickName" className="form-label">
+              Nombre de usuario
+            </label>
+            <input
+              type="text"
+              id="nickName"
+              name="nickName"
+              className="form-control"
+              value={formData.nickName}
+              onChange={handleChange}
+              placeholder="Ingresá tu usuario"
+              disabled={procesando}
+              required
+            />
           </div>
-        )}
 
-        <button
-          type="submit"
-          className="btn btn-dark w-100"
-          disabled={procesando}
-        >
-          {procesando ? "Ingresando..." : "Iniciar sesión"}
-        </button>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">
+              Contraseña
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              className="form-control"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Ingresá tu contraseña"
+              disabled={procesando}
+              required
+            />
+          </div>
 
-        <p className={styles.registro}>
-          ¿Todavía no tenés cuenta? <Link to="/registro">Registrate</Link>
-        </p>
-      </form>
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="btn btn-dark w-100"
+            disabled={procesando}
+          >
+            {procesando ? "Ingresando..." : "Iniciar sesión"}
+          </button>
+
+          <p className={styles.registro}>
+            ¿no tenés cuenta? <Link to="/registro">registrarse</Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

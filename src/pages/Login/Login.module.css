@@ -1,12 +1,39 @@
 .contenedorLogin {
   min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
   background: linear-gradient(135deg, #f9e8f1, #f3dce9);
 }
-
+.ladoIzquierdo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 40px;
+}
+.tituloLogin {
+  font-family: monospace;
+  font-weight: 800;
+  font-size: 2.2rem;
+  color: #1f1f1f;
+  letter-spacing: -0.5px;
+  user-select: none;
+  text-align: center;
+}
+.logoPrincipal {
+  max-width: 360px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+.ladoDerecho {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
 .formulario {
   width: 100%;
   max-width: 420px;
@@ -15,7 +42,6 @@
   border-radius: 20px;
   box-shadow: 0 8px 25px rgba(80, 35, 75, 0.1);
 }
-
 .formulario h1 {
   text-align: center;
   font-size: 28px;
@@ -23,37 +49,31 @@
   color: #49334e;
   margin-bottom: 8px;
 }
-
 .formulario > p {
   text-align: center;
   color: #987b94;
   margin-bottom: 30px;
 }
-
 .campo {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-bottom: 20px;
 }
-
 .campo label {
   font-weight: 600;
   color: #49334e;
 }
-
 .campo input {
   padding: 12px;
   border: 1px solid #e8c7da;
   border-radius: 10px;
   outline: none;
 }
-
 .campo input:focus {
   border-color: #c77da5;
   box-shadow: 0 0 0 3px rgba(145, 62, 112, 0.15);
 }
-
 .formulario button {
   width: 100%;
   padding: 12px;
@@ -65,38 +85,61 @@
   cursor: pointer;
   transition: background-color 0.2s;
 }
-
 .formulario button:hover {
   background-color: #713052;
-  border-color: #713052
+  border-color: #713052;
 }
-
 .formulario button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
-
-.error {
-  color: #dc3545 !important;
+p.error {
+  color: #dc3545;
   font-size: 14px;
   text-align: center;
   margin-bottom: 15px;
 }
-
 .registro {
   margin-top: 25px;
   margin-bottom: 0;
   text-align: center;
   font-size: 14px;
 }
-
 .registro a {
   color: #913e70;
   font-weight: 600;
   text-decoration: none;
 }
-
 .registro a:hover {
   color: #713052;
   text-decoration: underline;
+}
+@media (max-width: 768px) {
+  .contenedorLogin {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .ladoIzquierdo {
+    flex: initial;
+    gap: 12px;
+    padding: 30px 20px 10px;
+  }
+
+  .titulo {
+    font-size: 1.6rem;
+  }
+
+  .logoPrincipal {
+    max-width: 180px;
+  }
+
+  .ladoDerecho {
+    flex: initial;
+    padding: 20px;
+  }
+
+  .formulario {
+    padding: 30px 24px;
+  }
 }
