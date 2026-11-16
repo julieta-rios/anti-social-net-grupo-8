@@ -308,6 +308,10 @@
 .modalEditar {
   width: 100%;
   max-width: 460px;
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
   color: #392c3d;
   border-radius: 1.1rem;
@@ -345,8 +349,15 @@
   color: #913e70;
 }
 
+.modalHeader,
+.modalFooter {
+  flex-shrink: 0;
+}
+
 .modalContenido {
   padding: 1.5rem;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .modalContenido .form-control {
@@ -448,7 +459,7 @@
     flex-direction: column;
     align-items: flex-start;
     margin-top: -42px;
-    gap: 0.35rem;
+    gap: 0.75rem;
   }
 
   .identidadPerfil {
@@ -458,18 +469,27 @@
 
   .accionesPerfil {
     width: 100%;
-    flex: 1 1 100%;
     justify-content: flex-start;
   }
 }
 
 @media (max-width: 600px) {
   .contenedorPerfil {
-    padding-top: 1rem;
+    padding-top: 0.75rem 0.5rem 2rem;
+  }
+
+  .tarjetaPerfil {
+    border-radius: 1rem;
   }
 
   .portadaPerfil {
-    height: 115px;
+    height: 120px;
+    padding: 1rem;
+  }
+
+  .detallePortada {
+    font-size: 0.65rem;
+    letter-spacing: 0.12rem;
   }
 
   .informacionPerfil {
@@ -478,45 +498,95 @@
 
   .encabezadoPerfil {
     flex-direction: column;
-    align-items: flex-start;
-    margin-top: -42px;
-    gap: 0.75rem;
+    align-items: stretch;
+    margin-top: -45px;
+    gap: 1rem;
   }
 
   .identidadPerfil {
+    display: flex;
     align-items: center;
-    gap: 0.65rem;
+    gap: 0.85rem;
     width: 100%;
   }
 
   .avatarPerfil {
-    width: 90px;
-    height: 90px;
-    min-width: 90px;
+    width: 96px;
+    height: 96px;
+    min-width: 96px;
+    border-width: 4px
   }
 
   .datosUsuario h1 {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
+    margin-bottom: 0.2rem;
   }
 
   .datosUsuario p {
     font-size: 0.85rem;
+    margin-bottom: 0;
   }
 
-  .botonEditar {
-    margin: 0;
+  .accionesPerfil {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+    width: 100%;
+  }
+
+  .botonEditar,
+  .botonCrear,
+  .botonCerrarSesion {
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    padding: 0.55rem 0.4rem;
+    font-size: 0.82rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .botonCerrarSesion {
+    grid-column: 1 / -1;
   }
 
   .descripcionPerfil {
-    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    margin: 1.1rem 0;
   }
 
   .estadisticasPerfil {
-    gap: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    padding-top: 1rem;
+  }
+
+  .estadisticasPerfil div {
+    align-items: flex-start;
+    padding-left: 0.25rem;
+  }
+
+  .estadisticasPerfil div + div {
+    border-left: 1px solid #f1e7ef;
+    padding-left: 1.25rem;
+  }
+
+  .estadisticasPerfil strong {
+    font-size: 1.2rem;
+  }
+
+  .estadisticasPerfil span {
+    font-size: 0.78rem;
   }
 
   .seccionPublicaciones {
-    margin-top: 1.25rem;
+    margin-top: 1.75rem;
+  }
+
+  .tituloPublicaciones {
+    margin-bottom: 1rem;
   }
 
   .tituloPublicaciones h2 {
@@ -527,11 +597,54 @@
     padding: 0.65rem;
   }
 
+  .modalOverlay {
+    align-items: flex-start;
+    padding: 0.75rem;
+  }
+
+  .modalEditar {
+    margin: auto 0;
+  }
+
+  .modalHeader {
+    padding: 1rem 1.1rem;
+  }
+
+  .modalContenido {
+    padding: 1.1rem;
+  }
+
   .modalFooter {
-    width: 100%;
+    padding: 0.86rem 1.1rem;
+    gap: 0.5rem;
   }
 
   .modalFooter button {
-    width: 100%;
+    flex: 1;
+    padding: 0.55rem 0.4rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .informacionPerfil {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+  }
+
+  .avatarPerfil {
+    width: 86px;
+    height: 86px;
+    min-width: 86px;
+  }
+
+  .datosUsuario h1 {
+    font-size: 1.15rem;
+  }
+
+  .botonEditar,
+  .botonCrear,
+  .botonCerrarSesion {
+    font-size: 0.76rem;
   }
 }

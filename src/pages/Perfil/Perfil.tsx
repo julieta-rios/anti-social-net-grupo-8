@@ -234,31 +234,30 @@ export default function Perfil() {
                 <p>@{usuarioPerfil?.nickName}</p>
               </div>
             </div>
-            <div className={styles.accionesPerfil}>
-              {esMiPerfil && (
-                <div className={styles.accionesPerfil}>
-                  <button
-                    type="button"
-                    className={styles.botonEditar}
-                    onClick={abrirEditor}
-                  >
-                    <span aria-hidden="true">✎</span> Editar perfil
-                  </button>
 
-                  <Link to="/crear-post" className={styles.botonCrear}>
-                    + Crear publicación
-                  </Link>
+            {esMiPerfil && (
+              <div className={styles.accionesPerfil}>
+                <button
+                  type="button"
+                  className={styles.botonEditar}
+                  onClick={abrirEditor}
+                >
+                  <span aria-hidden="true">✎</span> Editar perfil
+                </button>
 
-                  <button
-                    type="button"
-                    className={styles.botonCerrarSesion}
-                    onClick={handleLogout}
-                  >
-                    Cerrar Sesión
-                  </button>
-                </div>
-              )}
-            </div>
+                <Link to="/crear-post" className={styles.botonCrear}>
+                  + Crear publicación
+                </Link>
+
+                <button
+                  type="button"
+                  className={styles.botonCerrarSesion}
+                  onClick={handleLogout}
+                >
+                  Cerrar Sesión
+                </button>
+              </div>
+            )}
           </div>
 
           <p className={styles.descripcionPerfil}>{descripcionMostrar}</p>
