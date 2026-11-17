@@ -10,12 +10,14 @@ interface PostCardProps {
   post: Post;
   cantidadComentarios: number;
   imagenes: PostImage[];
+  onToggleLike: (postId: number) => void; // <-- Nueva prop para manejar el like
 }
 
 export default function PostCard({
   post,
   cantidadComentarios,
   imagenes = [],
+  onToggleLike,
 }: PostCardProps) {
   const { user, avatarUrl, nombreMostrar } = useUser();
 
@@ -29,7 +31,7 @@ export default function PostCard({
     user?.id === post.UserId
       ? nombreMostrar.trim() || post.User.nickName
       : localStorage.getItem(`nombre-${post.UserId}`)?.trim() ||
-        post.User.nickName;
+      post.User.nickName;
 
   return (
     <article className={styles.postCard}>
@@ -81,10 +83,25 @@ export default function PostCard({
           {cantidadComentarios === 1 ? "comentario" : "comentarios"}
         </Link>
 
-        <Link to={`/post/${post.id}`} className={styles.botonVerMas}>
-          Ver publicación
-          <span aria-hidden="true"> →</span>
-        </Link>
+        <div className="d-flex flex-row align-items-center justify-content-end gap-2">
+          <div className="d-flex align-items-center gap-1">
+            <button 
+              className={`${styles.botonesPiePost} ${post.likedByMe ? styles.liked : ""}`} 
+              onClick={() => onToggleLike(post.id)}
+              aria-label="Dar me gusta"
+            >
+              <img src="/src/assets/like.png" alt="" />
+            </button>
+            <span className="small text-muted">{post.likesCount || 0}</span>
+          </div>
+
+          <Link to={`/post/${post.id}`} className={styles.botonesPiePost}>
+            <img src="/src/assets/comment.png" alt="" />
+          </Link>
+          <Link to={`/post/${post.id}`} className={styles.botonesPiePost}>
+            <img src="/src/assets/share.png" alt="" />
+          </Link>
+        </div>
       </div>
     </article>
   );

@@ -144,17 +144,34 @@
   font-size: 1.15rem;
 }
 
-.botonVerMas {
-  color: #913e70;
+.botonesPiePost {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 700;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
+
+  img {
+    width: 25px;
+    height: 25px;
+    transition: transform 0.2s ease;
+  }
 }
 
-.botonVerMas:hover {
-  color: #633052;
-  text-decoration: underline;
+.botonesPiePost:hover {
+  background-color: #987b94;
+  transform: translateY(-1px); 
+
+  img {
+    transform: scale(1.1);
+  }
 }
 
 .enlaceAutor {

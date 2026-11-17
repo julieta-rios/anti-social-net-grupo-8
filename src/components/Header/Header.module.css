@@ -1,7 +1,7 @@
 .barraNavegacion {
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 1050;
   background-color: #f9e8f1; 
   box-shadow: 0 4px 12px rgba(80, 35, 75, 0.1);
   padding: 1rem 0;

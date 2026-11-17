@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useUser } from "../../context/UserContext";
 import API_URL from "../../services/api";
 import type { Post, Tag, PostImage, Comment } from "../../types";
 import PostCard from "../../components/PostCard/PostCard";
@@ -13,11 +14,15 @@ interface PostEnriquecido extends Post {
 }
 
 export default function Home() {
-  const [posts, setPosts] = useState<PostEnriquecido[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [tagSeleccionado, setTagSeleccionado] = useState<string>("");
   const [cargando, setCargando] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
+  const { user } = useUser();
+
+  // Claves para el localStorage
+  const globalPostsKey = "postsHome_global";
+  const userLikesKey = user ? `user_liked_posts_${user.id}` : "guest_liked_posts";
 
   // Manejo del estado de un usuario sugerido mediante persistencia con localStorage
   const [usuariosSugeridos, setUsuariosSugeridos] = useState<UsuarioSugerido[]>(
@@ -129,6 +134,56 @@ export default function Home() {
     );
   };
 
+  // Manejo del estado de un post, (likes,etc), mediante persistencia con localStorage
+  // Inicializar posts desde la clave global (o vacío si no existe)
+  const [posts, setPosts] = useState<PostEnriquecido[]>(() => {
+    const guardados = localStorage.getItem(globalPostsKey);
+    if (guardados) {
+      try {
+        return JSON.parse(guardados);
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  });
+
+  // Guardar siempre en la clave global para que todos los usuarios compartan el contador
+  useEffect(() => {
+    if (posts.length > 0) {
+      localStorage.setItem(globalPostsKey, JSON.stringify(posts));
+    }
+  }, [posts]);
+
+  // Función para manejar los "likes" por ID
+  const handleToggleLike = (postId: number) => {
+    setPosts((prevPosts) => {
+      const nuevosPosts = prevPosts.map((post) => {
+        if (post.id === postId) {
+          const likedByMe = !post.likedByMe;
+          const currentCount = post.likesCount || 0;
+          const newCount = likedByMe
+            ? currentCount + 1
+            : Math.max(0, currentCount - 1);
+          return {
+            ...post,
+            likedByMe,
+            likesCount: newCount,
+          };
+        }
+        return post;
+      });
+      // Actualizamos la lista de IDs a los que este usuario dio like
+      const idsQueMeGustan = nuevosPosts
+        .filter((p) => p.likedByMe)
+        .map((p) => p.id);
+
+      localStorage.setItem(userLikesKey, JSON.stringify(idsQueMeGustan));
+
+      return nuevosPosts;
+    });
+  };
+
   useEffect(() => {
     const cargarDatos = async () => {
       try {
@@ -149,42 +204,46 @@ export default function Home() {
 
         setTags(dataTags);
 
-        // Cargar imágenes y comentarios de cada publicación
+        const postsGlobalesLocales: PostEnriquecido[] = JSON.parse(
+          localStorage.getItem(globalPostsKey) || "[]"
+        );
+
+        const misLikesIds: number[] = JSON.parse(
+          localStorage.getItem(userLikesKey) || "[]"
+        );
+
         const postsCompletos = await Promise.all(
           dataPosts.map(async (post) => {
             const postId = post.id;
+            const postGlobalLocal = postsGlobalesLocales.find((p) => p.id === postId);
 
             let imagenesCargadas: PostImage[] = [];
             let listaComentarios: Comment[] = [];
 
             try {
-              const resImg = await fetch(
-                `${API_URL}/postimages/post/${postId}`,
-              );
-
-              if (resImg.ok) {
-                imagenesCargadas = await resImg.json();
-              }
+              const resImg = await fetch(`${API_URL}/postimages/post/${postId}`);
+              if (resImg.ok) imagenesCargadas = await resImg.json();
             } catch {
               imagenesCargadas = [];
             }
 
             try {
               const resCom = await fetch(`${API_URL}/comments/post/${postId}`);
-
-              if (resCom.ok) {
-                listaComentarios = await resCom.json();
-              }
+              if (resCom.ok) listaComentarios = await resCom.json();
             } catch {
               listaComentarios = [];
             }
+
+            const likedByMe = misLikesIds.includes(postId);
 
             return {
               ...post,
               imagenesCargadas,
               cantidadComentarios: listaComentarios.length,
+              likesCount: postGlobalLocal ? postGlobalLocal.likesCount : (post.likesCount || 0),
+              likedByMe,
             };
-          }),
+          })
         );
 
         setPosts(postsCompletos);
@@ -197,13 +256,13 @@ export default function Home() {
     };
 
     cargarDatos();
-  }, []);
+  }, [user, userLikesKey]);
 
   // Filtrar publicaciones por etiqueta
   const postsFiltrados = tagSeleccionado
     ? posts.filter((post) =>
-        post.Tags.some((tag) => tag.name === tagSeleccionado),
-      )
+      post.Tags.some((tag) => tag.name === tagSeleccionado),
+    )
     : posts;
 
   return (
@@ -258,9 +317,8 @@ export default function Home() {
               <div className="d-flex flex-wrap gap-1 align-items-center">
                 <button
                   type="button"
-                  className={`btn btn-sm ${
-                    tagSeleccionado === "" ? "btn-dark" : "btn-outline-dark"
-                  }`}
+                  className={`btn btn-sm ${tagSeleccionado === "" ? "btn-dark" : "btn-outline-dark"
+                    }`}
                   onClick={() => setTagSeleccionado("")}
                 >
                   Todas
@@ -270,11 +328,10 @@ export default function Home() {
                   <button
                     key={tag.id}
                     type="button"
-                    className={`btn btn-sm ${
-                      tagSeleccionado === tag.name
-                        ? "btn-dark"
-                        : "btn-outline-secondary"
-                    }`}
+                    className={`btn btn-sm ${tagSeleccionado === tag.name
+                      ? "btn-dark"
+                      : "btn-outline-secondary"
+                      }`}
                     onClick={() => setTagSeleccionado(tag.name)}
                   >
                     #{tag.name}
@@ -316,6 +373,7 @@ export default function Home() {
                     post={post}
                     cantidadComentarios={post.cantidadComentarios}
                     imagenes={post.imagenesCargadas}
+                    onToggleLike={handleToggleLike}
                   />
                 </div>
               ))}

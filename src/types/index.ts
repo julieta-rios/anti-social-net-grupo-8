@@ -28,8 +28,13 @@ export interface Post {
   id: number;
   description: string;
   UserId: number;
-  User: User;
+  User: {
+    id: number;
+    nickName: string;
+  };
   Tags: Tag[];
+  likesCount?: number;
+  likedByMe?: boolean;
   createdAt: string;
   updatedAt?: string;
 }
