@@ -4,9 +4,6 @@ import API_URL from "../../services/api";
 import type { Post, Tag, PostImage, Comment } from "../../types";
 import PostCard from "../../components/PostCard/PostCard";
 import styles from "./Home.module.css";
-import SuggestedUsers, { type UsuarioSugerido } from "../../components/SuggestedAndTrending/SuggestedUsers";
-import TrendingUsers, { type TrendingUser } from "../../components/SuggestedAndTrending/TrendingUsers";
-
 
 interface PostEnriquecido extends Post {
   imagenesCargadas: PostImage[];
@@ -18,133 +15,20 @@ export default function Home() {
   const [tagSeleccionado, setTagSeleccionado] = useState<string>("");
   const [cargando, setCargando] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const { user } = useUser();
+  const {
+    user,
+    repostearPost,
+    quitarRepost,
+    estaReposteando,
+    obtenerCantidadReposts,
+  } = useUser();
 
   // Claves para el localStorage
   const globalPostsKey = "postsHome_global";
   const userLikesKey = user ? `user_liked_posts_${user.id}` : "guest_liked_posts";
 
-  // Manejo del estado de un usuario sugerido mediante persistencia con localStorage
-  const [usuariosSugeridos, setUsuariosSugeridos] = useState<UsuarioSugerido[]>(
-    () => {
-      const guardados = localStorage.getItem("usuariosSugeridos");
-      if (guardados) {
-        try {
-          return JSON.parse(guardados);
-        } catch {
-          // Si hay algún error al parsear, retorna el valor por defecto
-        }
-      }
-      return [
-        {
-          id: 1,
-          nombre: "Sofía Martínez",
-          interes: "Interés en #Tecnología",
-          avatar: "https://via.placeholder.com/40",
-          siguiendo: false,
-        },
-        {
-          id: 2,
-          nombre: "Carlos Gómez",
-          interes: "Publicó sobre #React",
-          avatar: "https://via.placeholder.com/40",
-          siguiendo: false,
-        },
-        {
-          id: 3,
-          nombre: "Juan Perez",
-          interes: "Publicó sobre #TypeScript",
-          avatar: "https://via.placeholder.com/40",
-          siguiendo: false,
-        },
-      ];
-    },
-  );
 
-  useEffect(() => {
-    localStorage.setItem(
-      "usuariosSugeridos",
-      JSON.stringify(usuariosSugeridos),
-    );
-  }, [usuariosSugeridos]);
-
-  // Manejo del estado de un usuario tendencia mediante persistencia con localStorage
-  const [trendingUsers, setTrendingUsers] = useState<TrendingUser[]>(() => {
-    const guardados = localStorage.getItem("trendingUsers");
-    if (guardados) {
-      try {
-        return JSON.parse(guardados);
-      } catch {
-        // Si hay algún error al parsear, retorna el valor por defecto
-      }
-    }
-    return [
-      {
-        id: 101,
-        nombre: "Lucía Tech",
-        avatar: "https://via.placeholder.com/40",
-        siguiendo: false,
-        seguidores: 4500,
-        likes: 1200,
-        numeroDePosts: 32,
-      },
-      {
-        id: 102,
-        nombre: "Dev Master",
-        avatar: "https://via.placeholder.com/40",
-        siguiendo: false,
-        seguidores: 8900,
-        likes: 3400,
-        numeroDePosts: 54,
-      },
-    ];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("trendingUsers", JSON.stringify(trendingUsers));
-  }, [trendingUsers]);
-
-  // Funciones de seguimiento para ambos tipos de usuario
-
-  const handleToggleSeguirSugerido = (id: number): void => {
-    if (!user) return;
-
-    setUsuariosSugeridos((prev) =>
-      prev.map((u) =>
-        u.id === id ? { ...u, siguiendo: !u.siguiendo } : u,
-      ),
-    );
-  };
-
-  const handleToggleSeguirTrending = (id: number): void => {
-    if (!user) return;
-
-    setTrendingUsers((prev) =>
-      prev.map((u) =>
-        u.id === id ? { ...u, siguiendo: !u.siguiendo } : u,
-      ),
-    );
-  };
-
-  //Filtro de seguidos
-  const usuariosSeguidos = [
-    ...usuariosSugeridos.filter((u) => u.siguiendo),
-    ...trendingUsers.filter((u) => u.siguiendo),
-  ];
-
-  // Función para manejar el "Dejar de seguir" por ID
-  const handleDejarDeSeguir = (id: number): void => {
-    setUsuariosSugeridos((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, siguiendo: false } : u)),
-    );
-
-    setTrendingUsers((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, siguiendo: false } : u)),
-    );
-  };
-
-  // Manejo del estado de un post, (likes,etc), mediante persistencia con localStorage
-  // Inicializar posts desde la clave global (o vacío si no existe)
+  // Estado de un post, (likes,etc)
   const [posts, setPosts] = useState<PostEnriquecido[]>(() => {
     const guardados = localStorage.getItem(globalPostsKey);
     if (guardados) {
@@ -166,6 +50,8 @@ export default function Home() {
 
   // Función para manejar los "likes" por ID
   const handleToggleLike = (postId: number) => {
+    if (!user) return;
+
     setPosts((prevPosts) => {
       const nuevosPosts = prevPosts.map((post) => {
         if (post.id === postId) {
@@ -193,6 +79,16 @@ export default function Home() {
     });
   };
 
+  const handleToggleRepost = (postId: number) => {
+    if (!user) return;
+
+    if (estaReposteando(postId)) {
+      quitarRepost(postId);
+    } else {
+      repostearPost(postId);
+    }
+  };
+
   useEffect(() => {
     const cargarDatos = async () => {
       try {
@@ -205,7 +101,7 @@ export default function Home() {
         ]);
 
         if (!resPosts.ok) {
-          throw new Error("No se pudieron cargar las publicaciones");
+          throw new Error("No se pudieron cargar las publicaciones.");
         }
 
         const dataPosts: Post[] = await resPosts.json();
@@ -274,60 +170,25 @@ export default function Home() {
     )
     : posts;
 
-  return (
+   return (
     <div className={`container mt-4 ${styles.contenedorHome}`}>
       <div className="row g-4">
-        {/* Columna principal: publicaciones */}
-        <div className="col-lg-8">
-          {usuariosSeguidos.length > 0 && (
-            <div className="card shadow-sm border-0 p-3 bg-white rounded-4 mb-4">
-              <h6 className="fw-bold text-dark mb-3">
-                Siguiendo recientemente
-              </h6>
-              <div className="d-flex flex-row gap-3 overflow-auto pb-2">
-                {usuariosSeguidos.map((usuario) => (
-                  <div
-                    key={usuario.id}
-                    className="d-flex flex-column align-items-center p-2 border rounded-3 bg-light text-center"
-                    style={{ minWidth: "110px", flex: "0 0 auto" }}
-                  >
-                    <img
-                      src={usuario.avatar}
-                      alt={usuario.nombre}
-                      className="rounded-circle mb-1"
-                      style={{
-                        width: "45px",
-                        height: "45px",
-                        objectFit: "cover",
-                      }}
-                    />
-                    <span
-                      className="small fw-semibold text-dark text-truncate w-100"
-                      style={{ fontSize: "0.8rem" }}
-                    >
-                      {usuario.nombre.split(" ")[0]}
-                    </span>
-                    <button
-                      className="btn btn-outline-danger btn-sm py-0 px-2 mt-1"
-                      style={{ fontSize: "0.65rem" }}
-                      onClick={() => handleDejarDeSeguir(usuario.id)}
-                    >
-                      Dejar de seguir
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          <span className={styles.textoPublicaciones}>Publicaciones</span>
+        <div className="col-12">
+          <span className={styles.textoPublicaciones}>
+            Publicaciones
+          </span>
+
           <div className="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
             {/* Filtro por etiquetas */}
             {tags.length > 0 && (
               <div className="d-flex flex-wrap gap-1 align-items-center">
                 <button
                   type="button"
-                  className={`btn btn-sm ${tagSeleccionado === "" ? "btn-dark" : "btn-outline-dark"
-                    }`}
+                  className={`btn btn-sm ${
+                    tagSeleccionado === ""
+                      ? "btn-dark"
+                      : "btn-outline-dark"
+                  }`}
                   onClick={() => setTagSeleccionado("")}
                 >
                   Todas
@@ -337,10 +198,11 @@ export default function Home() {
                   <button
                     key={tag.id}
                     type="button"
-                    className={`btn btn-sm ${tagSeleccionado === tag.name
-                      ? "btn-dark"
-                      : "btn-outline-secondary"
-                      }`}
+                    className={`btn btn-sm ${
+                      tagSeleccionado === tag.name
+                        ? "btn-dark"
+                        : "btn-outline-secondary"
+                    }`}
                     onClick={() => setTagSeleccionado(tag.name)}
                   >
                     #{tag.name}
@@ -353,8 +215,13 @@ export default function Home() {
           {/* Cargando */}
           {cargando && (
             <div className="text-center py-5">
-              <div className="spinner-border text-dark" role="status" />
-              <p className="mt-2 text-muted">Cargando publicaciones...</p>
+              <div
+                className="spinner-border text-dark"
+                role="status"
+              />
+              <p className="mt-2 text-muted">
+                Cargando publicaciones...
+              </p>
             </div>
           )}
 
@@ -383,21 +250,12 @@ export default function Home() {
                     cantidadComentarios={post.cantidadComentarios}
                     imagenes={post.imagenesCargadas}
                     onToggleLike={handleToggleLike}
+                    onToggleRepost={handleToggleRepost}
+                    estaReposteando={estaReposteando(post.id)}
+                    cantidadReposts={obtenerCantidadReposts(post.id)}
                   />
                 </div>
               ))}
-          </div>
-        </div>
-        <div className="col-lg-4">
-          <div className="d-flex flex-column align-item-center justify-content-center gap-3">
-            <SuggestedUsers
-              usuarios={usuariosSugeridos}
-              onToggleSeguir={handleToggleSeguirSugerido}
-            />
-            <TrendingUsers
-              usuarios={trendingUsers}
-              onToggleSeguir={handleToggleSeguirTrending}
-            />
           </div>
         </div>
       </div>

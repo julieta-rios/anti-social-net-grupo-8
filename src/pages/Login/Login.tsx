@@ -53,7 +53,7 @@ export default function Login() {
       }
 
       const users: User[] = await response.json();
-      console.log('Usuarios: ', users);
+
       const usuarioEncontrado = users.find(
         (user) =>
           user.nickName.toLowerCase() ===

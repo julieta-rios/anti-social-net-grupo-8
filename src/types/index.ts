@@ -35,6 +35,7 @@ export interface Post {
   Tags: Tag[];
   likesCount?: number;
   likedByMe?: boolean;
+  sharesCount?: number;
   createdAt: string;
   updatedAt?: string;
 }

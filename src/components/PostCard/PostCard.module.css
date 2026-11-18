@@ -115,7 +115,6 @@
 }
 
 /* PIE DE LA PUBLICACIÓN */
-
 .piePost {
   display: flex;
   align-items: center;
@@ -125,53 +124,17 @@
   padding: 0.85rem 1.25rem;
 }
 
-.cantidadComentarios {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: #987b94;
-  font-size: 0.82rem;
-  text-decoration: none;
-}
-
-.cantidadComentarios:hover {
-  text-decoration: none;
+.botonVerMas {
   color: #913e70;
-}
-
-.cantidadComentarios span {
-  color: #b45d91;
-  font-size: 1.15rem;
-}
-
-.botonesPiePost {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 700;
   text-decoration: none;
-  transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
-
-  img {
-    width: 25px;
-    height: 25px;
-    transition: transform 0.2s ease;
-  }
+  transition: color 0.2s ease;
 }
 
-.botonesPiePost:hover {
-  background-color: #987b94;
-  transform: translateY(-1px); 
-
-  img {
-    transform: scale(1.1);
-  }
+.botonVerMas:hover {
+  color: #633052;
+  text-decoration: underline;
 }
 
 .enlaceAutor {
@@ -185,6 +148,48 @@
 
 .enlaceAutor .datosAutor {
   cursor: pointer;
+}
+
+.accionesPost {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.botonAccion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #99859a;
+  text-decoration: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.botonAccion:hover {
+  color: #913e70;
+}
+
+.botonAccion:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.liked {
+  color: #d45b83;
+}
+
+.reposteado {
+  color: #39966b;
+}
+
+.reposteado:hover {
+  color: #28784f;
 }
 
 /* RESPONSIVE */
@@ -212,5 +217,19 @@
 
   .etiquetaPublicacion {
     display: none;
+  }
+
+  .accionesPost {
+    gap: 0.85rem;
+  }
+
+  .botonAccion {
+    font-size: 0.78rem;
+    gap: 0.3rem;
+  }
+
+  .botonVerMas {
+    font-size: 0.78rem;
+    white-space: nowrap;
   }
 }

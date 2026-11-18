@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-aria/ssr": "^3.9.10",
     "bootstrap": "^5.3.8",
+    "lucide-react": "^1.74.0",
     "react": "^19.3.1",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.3.1",

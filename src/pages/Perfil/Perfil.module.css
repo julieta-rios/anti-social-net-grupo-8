@@ -181,6 +181,19 @@
   background-color: #f9e8f1;
 }
 
+.botonSeguir {
+  padding: 0.65rem 1.2rem;
+  border: 1px solid #f0cddd;
+  border-radius: 0.7rem;
+  background-color: #913e70;
+  color: white;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.botonSeguir:hover {
+  background-color: #713052;
+}
 
 /*Descripcion y estadisticas*/
 .descripcionPerfil {
@@ -191,14 +204,17 @@
 
 .estadisticasPerfil {
   display: flex;
+  align-items: stretch;
   gap: 2rem;
   border-top: 1px solid #f1e7ef;
   padding-top: 1rem;
 }
 
-.estadisticasPerfil div {
+.estadisticasPerfil > div,
+.estadisticasPerfil > button {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 0.1rem;
 }
 
@@ -211,6 +227,23 @@
 .estadisticasPerfil span {
   color: #99859a;
   font-size: 0.8rem;
+}
+
+.botonEstadistica {
+  border: none;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.botonEstadistica:hover strong {
+  color: #a64f83;
+}
+
+.botonEstadistica:hover span {
+  color: #913e70;
 }
 
 /*Publicacioes*/
@@ -438,6 +471,97 @@
   filter: brightness(1.08);
 }
 
+/* Modal de seguidores y seguidos */
+.modalLista {
+  width: 100%;
+  max-width: 430px;
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  color: #392c3d;
+  border-radius: 1.1rem;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: aparecer 0.2s ease;
+}
+
+.listaUsuarios {
+  padding: 0.75rem 1.25rem;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.usuarioLista {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1e7ef;
+  text-decoration: none;
+  color: #35243b;
+  transition: background-color 0.2s ease;
+}
+
+.usuarioLista:last-child {
+  border-bottom: none;
+}
+
+.usuarioLista:hover {
+  background-color: #fcf5f9;
+  color: #913e70;
+}
+
+.avatarLista {
+  width: 45px;
+  height: 45px;
+  min-width: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #f8eaf1;
+}
+
+.datosLista {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.datosLista strong {
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+.datosLista span {
+  color: #99859a;
+  font-size: 0.82rem;
+}
+
+.listaVacia {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #967b91;
+  font-size: 0.9rem;
+}
+
+.botonEstadistica {
+  border: none;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.botonEstadistica:hover strong {
+  color: #a64f83;
+}
+
+.botonEstadistica:hover span {
+  color: #913e70;
+}
+
 
 /* Animacion */
 @keyframes aparecer {
@@ -473,9 +597,16 @@
   }
 }
 
+.etiquetaRepost {
+  margin: 0 0 0.5rem 0.5rem;
+  color: #39966b;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
 @media (max-width: 600px) {
   .contenedorPerfil {
-    padding-top: 0.75rem 0.5rem 2rem;
+    padding: 0.75rem 0.5rem 2rem;
   }
 
   .tarjetaPerfil {
@@ -558,17 +689,19 @@
 
   .estadisticasPerfil {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 0;
     padding-top: 1rem;
   }
 
-  .estadisticasPerfil div {
+  .estadisticasPerfil > div,
+  .estadisticasPerfil > button {
     align-items: flex-start;
+    min-width: 0;
     padding-left: 0.25rem;
   }
 
-  .estadisticasPerfil div + div {
+  .estadisticasPerfil > :nth-child(even) {
     border-left: 1px solid #f1e7ef;
     padding-left: 1.25rem;
   }
