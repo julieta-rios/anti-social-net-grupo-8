@@ -7,12 +7,15 @@ export interface UsuarioSugerido {
     siguiendo: boolean;
 }
 
+
+
 interface HomeFeedProps {
     usuarios: UsuarioSugerido[];
     onToggleSeguir: (id: number) => void;
+    puedeSeguir: boolean;
 }
 
-export default function SuggestedUsers({ usuarios, onToggleSeguir }: HomeFeedProps) {
+export default function SuggestedUsers({ usuarios, onToggleSeguir, puedeSeguir }: HomeFeedProps) {
     const sugeridosNoSeguidos = (usuarios || []).filter((u) => !u.siguiendo);
     
     return (
@@ -44,6 +47,7 @@ export default function SuggestedUsers({ usuarios, onToggleSeguir }: HomeFeedPro
                                 className="btn btn-sm rounded-pill px-3 py-1 btn-outline-dark"
                                 style={{ fontSize: '0.8rem', minWidth: '85px' }}
                                 onClick={() => onToggleSeguir(usuario.id)}
+                                disabled={!puedeSeguir}
                             >
                                 Seguir
                             </button>

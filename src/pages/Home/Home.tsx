@@ -393,10 +393,12 @@ export default function Home() {
             <SuggestedUsers
               usuarios={usuariosSugeridos}
               onToggleSeguir={handleToggleSeguirSugerido}
+              puedeSeguir={!!user}
             />
             <TrendingUsers
               usuarios={trendingUsers}
               onToggleSeguir={handleToggleSeguirTrending}
+              puedeSeguir={!!user}
             />
           </div>
         </div>

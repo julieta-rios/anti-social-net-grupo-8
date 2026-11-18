@@ -13,8 +13,9 @@ export interface TrendingUser {
 interface HomeFeedProps {
     usuarios: TrendingUser[];
     onToggleSeguir: (id: number) => void;
+    puedeSeguir: boolean;
 }
-export default function ({ usuarios, onToggleSeguir }: HomeFeedProps) {
+export default function ({ usuarios, onToggleSeguir, puedeSeguir }: HomeFeedProps) {
     const trendingNoSeguidos = (usuarios || []).filter((u) => !u.siguiendo);
     
     return (
@@ -46,6 +47,7 @@ export default function ({ usuarios, onToggleSeguir }: HomeFeedProps) {
                                 className="btn btn-sm rounded-pill px-3 py-1 btn-outline-dark"
                                 style={{ fontSize: '0.8rem', minWidth: '85px' }}
                                 onClick={() => onToggleSeguir(usuario.id)}
+                                disabled={!puedeSeguir}
                             >
                                 Seguir
                             </button>
