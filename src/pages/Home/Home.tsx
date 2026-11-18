@@ -104,16 +104,25 @@ export default function Home() {
     localStorage.setItem("trendingUsers", JSON.stringify(trendingUsers));
   }, [trendingUsers]);
 
-  //Funciones de seguimiento para ambos tipo de usuario
+  // Funciones de seguimiento para ambos tipos de usuario
+
   const handleToggleSeguirSugerido = (id: number): void => {
+    if (!user) return;
+
     setUsuariosSugeridos((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, siguiendo: !u.siguiendo } : u)),
+      prev.map((u) =>
+        u.id === id ? { ...u, siguiendo: !u.siguiendo } : u,
+      ),
     );
   };
 
   const handleToggleSeguirTrending = (id: number): void => {
+    if (!user) return;
+
     setTrendingUsers((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, siguiendo: !u.siguiendo } : u)),
+      prev.map((u) =>
+        u.id === id ? { ...u, siguiendo: !u.siguiendo } : u,
+      ),
     );
   };
 
