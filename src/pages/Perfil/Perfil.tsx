@@ -90,13 +90,11 @@ export default function Perfil() {
       localStorage.setItem(userLikesKey, JSON.stringify(idsQueMeGustan));
 
       const postsGlobales = JSON.parse(
-        localStorage.getItem("postsHome_global") || "[]"
+        localStorage.getItem("postsHome_global") || "[]",
       );
 
       const postsActualizados = postsGlobales.map((post: Post) => {
-        const postActualizado = nuevosPosts.find(
-          (item) => item.id === post.id
-        );
+        const postActualizado = nuevosPosts.find((item) => item.id === post.id);
 
         return postActualizado
           ? { ...post, likesCount: postActualizado.likesCount }
@@ -105,7 +103,7 @@ export default function Perfil() {
 
       localStorage.setItem(
         "postsHome_global",
-        JSON.stringify(postsActualizados)
+        JSON.stringify(postsActualizados),
       );
 
       return nuevosPosts;
@@ -118,9 +116,7 @@ export default function Perfil() {
     ? obtenerIdsSeguidores(idPerfil).length
     : 0;
 
-  const cantidadSeguidos = idPerfil
-    ? obtenerIdsSeguidos(idPerfil).length
-    : 0;
+  const cantidadSeguidos = idPerfil ? obtenerIdsSeguidos(idPerfil).length : 0;
 
   const handleToggleSeguir = () => {
     if (!idPerfil || !user || esMiPerfil) return;
@@ -142,9 +138,7 @@ export default function Perfil() {
     }
   };
 
-  const abrirListaUsuarios = async (
-    tipo: "seguidores" | "siguiendo",
-  ) => {
+  const abrirListaUsuarios = async (tipo: "seguidores" | "siguiendo") => {
     if (!idPerfil) return;
 
     setTipoModal(tipo);
@@ -195,9 +189,9 @@ export default function Perfil() {
     : localStorage.getItem(`descripcion-${idPerfil}`)?.trim() ||
       "Un espacio para compartir ideas, intereses y experiencias.";
 
-  const [tipoModal, setTipoModal] = useState<
-    "seguidores" | "siguiendo" | null
-  >(null);
+  const [tipoModal, setTipoModal] = useState<"seguidores" | "siguiendo" | null>(
+    null,
+  );
 
   const [usuariosModal, setUsuariosModal] = useState<User[]>([]);
   const [cargandoUsuarios, setCargandoUsuarios] = useState(false);
@@ -236,11 +230,11 @@ export default function Perfil() {
         }
 
         const misLikesIds: number[] = JSON.parse(
-          localStorage.getItem(userLikesKey) || "[]"
+          localStorage.getItem(userLikesKey) || "[]",
         );
-        
+
         const postsGlobalesLocales: Post[] = JSON.parse(
-          localStorage.getItem("postsHome_global") || "[]"
+          localStorage.getItem("postsHome_global") || "[]",
         );
 
         const dataPosts: Post[] = await responsePosts.json();
@@ -288,14 +282,14 @@ export default function Perfil() {
               console.error("Error al cargar datos de la publicación:", error);
             }
 
-
             return {
               ...post,
               cantidadComentarios,
               imagenesCargadas,
               esRepost: post.esRepost,
               likesCount:
-                postsGlobalesLocales.find((p) => p.id === post.id)?.likesCount ||
+                postsGlobalesLocales.find((p) => p.id === post.id)
+                  ?.likesCount ||
                 post.likesCount ||
                 0,
               likedByMe: misLikesIds.includes(post.id),
@@ -643,7 +637,10 @@ export default function Perfil() {
         {!cargando && !error && misPosts.length > 0 && (
           <div className={styles.listaPublicaciones}>
             {misPosts.map((post) => (
-              <div className={styles.publicacion} key={`${post.id}-${post.esRepost ? "repost" : "original"}`}>
+              <div
+                className={styles.publicacion}
+                key={`${post.id}-${post.esRepost ? "repost" : "original"}`}
+              >
                 {post.esRepost && (
                   <p className={styles.etiquetaRepost}>
                     <Repeat2 size={16} aria-hidden="true" /> Reposteado

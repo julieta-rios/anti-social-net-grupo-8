@@ -94,9 +94,7 @@ export default function ModalSeguidores({
                     className={styles.botonSeguir}
                     onClick={() => onToggleSeguir(usuario.id)}
                   >
-                    {estaSiguiendo(usuario.id)
-                      ? "Dejar de seguir"
-                      : "Seguir"}
+                    {estaSiguiendo(usuario.id) ? "Dejar de seguir" : "Seguir"}
                   </button>
                 )}
               </div>

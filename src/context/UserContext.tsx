@@ -36,9 +36,7 @@ interface UserProviderProps {
 
 const obtenerSeguidosGuardados = (idUsuario: number): number[] => {
   try {
-    return JSON.parse(
-      localStorage.getItem(`seguidos-${idUsuario}`) || "[]"
-    );
+    return JSON.parse(localStorage.getItem(`seguidos-${idUsuario}`) || "[]");
   } catch {
     return [];
   }
@@ -46,9 +44,7 @@ const obtenerSeguidosGuardados = (idUsuario: number): number[] => {
 
 const obtenerRepostsGuardados = (idUsuario: number): number[] => {
   try {
-    return JSON.parse(
-      localStorage.getItem(`reposts-${idUsuario}`) || "[]"
-    );
+    return JSON.parse(localStorage.getItem(`reposts-${idUsuario}`) || "[]");
   } catch {
     return [];
   }
@@ -141,13 +137,13 @@ export function UserProvider({ children }: UserProviderProps) {
     if (!user) return;
 
     setNombreMostrar(nombre);
-    
+
     if (nombre.trim()) {
       localStorage.setItem(`nombre-${user.id}`, nombre.trim());
     } else {
       localStorage.removeItem(`nombre-${user.id}`);
     }
-    };
+  };
 
   const actualizarDescripcion = (descripcion: string) => {
     if (!user) return;
@@ -155,25 +151,19 @@ export function UserProvider({ children }: UserProviderProps) {
     setDescripcionPerfil(descripcion);
 
     if (descripcion.trim()) {
-      localStorage.setItem(
-        `descripcion-${user.id}`,
-        descripcion.trim()
-      );
+      localStorage.setItem(`descripcion-${user.id}`, descripcion.trim());
     } else {
       localStorage.removeItem(`descripcion-${user.id}`);
     }
-};
+  };
 
-const seguirUsuario = (idUsuario: number) => {
+  const seguirUsuario = (idUsuario: number) => {
     if (!user || user.id === idUsuario || seguidos.includes(idUsuario)) return;
 
     const nuevosSeguidos = [...seguidos, idUsuario];
 
     setSeguidos(nuevosSeguidos);
-    localStorage.setItem(
-      `seguidos-${user.id}`,
-      JSON.stringify(nuevosSeguidos)
-    );
+    localStorage.setItem(`seguidos-${user.id}`, JSON.stringify(nuevosSeguidos));
   };
 
   const dejarDeSeguir = (idUsuario: number) => {
@@ -182,10 +172,7 @@ const seguirUsuario = (idUsuario: number) => {
     const nuevosSeguidos = seguidos.filter((id) => id !== idUsuario);
 
     setSeguidos(nuevosSeguidos);
-    localStorage.setItem(
-      `seguidos-${user.id}`,
-      JSON.stringify(nuevosSeguidos)
-    );
+    localStorage.setItem(`seguidos-${user.id}`, JSON.stringify(nuevosSeguidos));
   };
 
   const estaSiguiendo = (idUsuario: number) => {
@@ -220,10 +207,7 @@ const seguirUsuario = (idUsuario: number) => {
     const nuevosReposts = [...reposts, postId];
 
     setReposts(nuevosReposts);
-    localStorage.setItem(
-      `reposts-${user.id}`,
-      JSON.stringify(nuevosReposts)
-    );
+    localStorage.setItem(`reposts-${user.id}`, JSON.stringify(nuevosReposts));
   };
 
   const quitarRepost = (postId: number) => {
@@ -232,10 +216,7 @@ const seguirUsuario = (idUsuario: number) => {
     const nuevosReposts = reposts.filter((id) => id !== postId);
 
     setReposts(nuevosReposts);
-    localStorage.setItem(
-      `reposts-${user.id}`,
-      JSON.stringify(nuevosReposts)
-    );
+    localStorage.setItem(`reposts-${user.id}`, JSON.stringify(nuevosReposts));
   };
 
   const estaReposteando = (postId: number) => {
@@ -263,7 +244,6 @@ const seguirUsuario = (idUsuario: number) => {
 
     return cantidad;
   };
-
 
   return (
     <UserContext.Provider

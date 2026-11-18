@@ -25,8 +25,9 @@ export default function Home() {
 
   // Claves para el localStorage
   const globalPostsKey = "postsHome_global";
-  const userLikesKey = user ? `user_liked_posts_${user.id}` : "guest_liked_posts";
-
+  const userLikesKey = user
+    ? `user_liked_posts_${user.id}`
+    : "guest_liked_posts";
 
   // Estado de un post, (likes,etc)
   const [posts, setPosts] = useState<PostEnriquecido[]>(() => {
@@ -110,23 +111,27 @@ export default function Home() {
         setTags(dataTags);
 
         const postsGlobalesLocales: PostEnriquecido[] = JSON.parse(
-          localStorage.getItem(globalPostsKey) || "[]"
+          localStorage.getItem(globalPostsKey) || "[]",
         );
 
         const misLikesIds: number[] = JSON.parse(
-          localStorage.getItem(userLikesKey) || "[]"
+          localStorage.getItem(userLikesKey) || "[]",
         );
 
         const postsCompletos = await Promise.all(
           dataPosts.map(async (post) => {
             const postId = post.id;
-            const postGlobalLocal = postsGlobalesLocales.find((p) => p.id === postId);
+            const postGlobalLocal = postsGlobalesLocales.find(
+              (p) => p.id === postId,
+            );
 
             let imagenesCargadas: PostImage[] = [];
             let listaComentarios: Comment[] = [];
 
             try {
-              const resImg = await fetch(`${API_URL}/postimages/post/${postId}`);
+              const resImg = await fetch(
+                `${API_URL}/postimages/post/${postId}`,
+              );
               if (resImg.ok) imagenesCargadas = await resImg.json();
             } catch {
               imagenesCargadas = [];
@@ -145,10 +150,12 @@ export default function Home() {
               ...post,
               imagenesCargadas,
               cantidadComentarios: listaComentarios.length,
-              likesCount: postGlobalLocal ? postGlobalLocal.likesCount : (post.likesCount || 0),
+              likesCount: postGlobalLocal
+                ? postGlobalLocal.likesCount
+                : post.likesCount || 0,
               likedByMe,
             };
-          })
+          }),
         );
 
         setPosts(postsCompletos);
@@ -166,17 +173,15 @@ export default function Home() {
   // Filtrar publicaciones por etiqueta
   const postsFiltrados = tagSeleccionado
     ? posts.filter((post) =>
-      post.Tags.some((tag) => tag.name === tagSeleccionado),
-    )
+        post.Tags.some((tag) => tag.name === tagSeleccionado),
+      )
     : posts;
 
-   return (
+  return (
     <div className={`container mt-4 ${styles.contenedorHome}`}>
       <div className="row g-4">
         <div className="col-12">
-          <span className={styles.textoPublicaciones}>
-            Publicaciones
-          </span>
+          <span className={styles.textoPublicaciones}>Publicaciones</span>
 
           <div className="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
             {/* Filtro por etiquetas */}
@@ -185,9 +190,7 @@ export default function Home() {
                 <button
                   type="button"
                   className={`btn btn-sm ${
-                    tagSeleccionado === ""
-                      ? "btn-dark"
-                      : "btn-outline-dark"
+                    tagSeleccionado === "" ? "btn-dark" : "btn-outline-dark"
                   }`}
                   onClick={() => setTagSeleccionado("")}
                 >
@@ -215,13 +218,8 @@ export default function Home() {
           {/* Cargando */}
           {cargando && (
             <div className="text-center py-5">
-              <div
-                className="spinner-border text-dark"
-                role="status"
-              />
-              <p className="mt-2 text-muted">
-                Cargando publicaciones...
-              </p>
+              <div className="spinner-border text-dark" role="status" />
+              <p className="mt-2 text-muted">Cargando publicaciones...</p>
             </div>
           )}
 

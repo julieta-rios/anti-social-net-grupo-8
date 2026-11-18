@@ -285,7 +285,9 @@
   border-radius: 1rem;
   padding: 1rem;
   box-shadow: 0 3px 12px rgba(80, 35, 75, 0.045);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .publicacion:hover {
@@ -562,7 +564,6 @@
   color: #913e70;
 }
 
-
 /* Animacion */
 @keyframes aparecer {
   from {
@@ -645,7 +646,7 @@
     width: 96px;
     height: 96px;
     min-width: 96px;
-    border-width: 4px
+    border-width: 4px;
   }
 
   .datosUsuario h1 {

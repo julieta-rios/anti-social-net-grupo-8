@@ -13,7 +13,6 @@ interface PostCardProps {
   cantidadReposts: number;
   imagenes: PostImage[];
   onToggleLike: (postId: number) => void; // <-- Nueva prop para manejar el like
-  onToggleShare: (postId: number) => void;
   onToggleRepost: (postId: number) => void;
   estaReposteando: boolean;
 }
@@ -24,13 +23,8 @@ export default function PostCard({
   cantidadReposts,
   imagenes = [],
   onToggleLike,
-  onToggleShare,
   onToggleRepost,
-  repostearPost,
-  quitarRepost,
   estaReposteando,
-  obtenerIdsReposteados,
-  obtenerCantidadReposts,
 }: PostCardProps) {
   const { user, avatarUrl, nombreMostrar } = useUser();
 
@@ -44,9 +38,9 @@ export default function PostCard({
     user?.id === post.UserId
       ? nombreMostrar.trim() || post.User.nickName
       : localStorage.getItem(`nombre-${post.UserId}`)?.trim() ||
-      post.User.nickName;
+        post.User.nickName;
 
-       const handleLike = () => {
+  const handleLike = () => {
     if (!user) return;
     onToggleLike(post.id);
   };
@@ -108,10 +102,7 @@ export default function PostCard({
             disabled={!user}
             aria-label={post.likedByMe ? "Quitar me gusta" : "Dar me gusta"}
           >
-            <Heart
-              size={19}
-              fill={post.likedByMe ? "currentColor" : "none"}
-            />
+            <Heart size={19} fill={post.likedByMe ? "currentColor" : "none"} />
             <span>{post.likesCount || 0}</span>
           </button>
 
@@ -122,7 +113,9 @@ export default function PostCard({
             }`}
             onClick={handleRepost}
             disabled={!user}
-            aria-label={estaReposteando ? "Quitar repost" : "Repostear publicación"}
+            aria-label={
+              estaReposteando ? "Quitar repost" : "Repostear publicación"
+            }
             title={estaReposteando ? "Quitar repost" : "Repostear"}
           >
             <Repeat2 size={19} />

@@ -19,9 +19,10 @@
   padding: 0.3rem 0.9rem;
   font-size: 0.9rem;
   font-weight: 500;
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
 }
-
 
 .contenedorHome > :global(.row) {
   justify-content: center;
@@ -36,7 +37,7 @@
 }
 
 /* Centrar título y filtros */
-.textoPublicaciones{
+.textoPublicaciones {
   display: block;
   width: 100%;
   margin-bottom: 0.7rem;
@@ -55,7 +56,7 @@
 }
 
 @media (max-width: 991px) {
-  .textoPublicaciones{
+  .textoPublicaciones {
     text-align: center;
     margin-bottom: 0.6rem;
   }
@@ -76,7 +77,7 @@
     padding: 0.25rem 0.75rem;
     font-size: 0.85rem;
   }
-  .textoPublicaciones{
+  .textoPublicaciones {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
   }
