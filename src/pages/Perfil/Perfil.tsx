@@ -4,6 +4,7 @@ import { Repeat2 } from "lucide-react";
 import { useUser } from "../../context/UserContext";
 import API_URL from "../../services/api";
 import type { Post, Comment, PostImage, User } from "../../types";
+import { PencilSparkles } from "lucide-react";
 import PostCard from "../../components/PostCard/PostCard";
 import ModalSeguidores from "../../components/ModalSeguidores/ModalSeguidores";
 import defaultAvatar from "../../assets/default-avatar.jpg";
@@ -411,7 +412,8 @@ export default function Perfil() {
                   className={styles.botonEditar}
                   onClick={abrirEditor}
                 >
-                  <span aria-hidden="true">✎</span> Editar perfil
+                  <PencilSparkles size={16} aria-hidden="true" />
+                  Editar perfil
                 </button>
 
                 <Link to="/crear-post" className={styles.botonCrear}>
