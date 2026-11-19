@@ -171,11 +171,13 @@ export default function Home() {
   }, [user, userLikesKey]);
 
   // Filtrar publicaciones por etiqueta
-  const postsFiltrados = tagSeleccionado
-    ? posts.filter((post) =>
-        post.Tags.some((tag) => tag.name === tagSeleccionado),
-      )
-    : posts;
+  const postsFiltrados = (
+    tagSeleccionado
+      ? posts.filter((post) =>
+          post.Tags.some((tag) => tag.name === tagSeleccionado),
+        )
+      : [...posts]
+                      ).reverse() // orden del mas nuevo al mas viejo;
 
   return (
     <div className={`container mt-4 ${styles.contenedorHome}`}>
