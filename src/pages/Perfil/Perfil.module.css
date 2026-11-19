@@ -645,8 +645,8 @@
 
   .estadisticasPerfil {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
     padding-top: 1rem;
   }
 
@@ -657,9 +657,9 @@
     padding-left: 0.25rem;
   }
 
-  .estadisticasPerfil > :nth-child(even) {
+  .estadisticasPerfil > :not(:fisrt-child) {
     border-left: 1px solid #f1e7ef;
-    padding-left: 1.25rem;
+    padding-left: 0.75rem;
   }
 
   .estadisticasPerfil strong {
