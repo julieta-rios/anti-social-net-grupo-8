@@ -2,7 +2,11 @@ import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 import type { User } from "../types";
 
-// Permite mantener la sesión y las preferencias del usuario.
+
+export interface RepostGuardado {
+  postId: number;
+  repostedAt: string;
+}
 
 interface UserContextType {
   user: User | null;
@@ -25,6 +29,7 @@ interface UserContextType {
   quitarRepost: (postId: number) => void;
   estaReposteando: (postId: number) => boolean;
   obtenerIdsReposteados: (idUsuario: number) => number[];
+  obtenerRepostsUsuario: (idUsuario: number) => RepostGuardado[];
   obtenerCantidadReposts: (postId: number) => number;
 }
 
@@ -42,9 +47,17 @@ const obtenerSeguidosGuardados = (idUsuario: number): number[] => {
   }
 };
 
-const obtenerRepostsGuardados = (idUsuario: number): number[] => {
+const obtenerRepostsGuardados = (idUsuario: number): RepostGuardado[] => {
   try {
-    return JSON.parse(localStorage.getItem(`reposts-${idUsuario}`) || "[]");
+    const raw = JSON.parse(
+      localStorage.getItem(`reposts-${idUsuario}`) || "[]",
+    );
+
+    if (!Array.isArray(raw)) return [];
+
+    return raw.map((item) =>
+      typeof item === "number" ? { postId: item, repostedAt: "" } : item,
+    );
   } catch {
     return [];
   }
@@ -92,14 +105,18 @@ export function UserProvider({ children }: UserProviderProps) {
     return obtenerSeguidosGuardados(usuario.id);
   });
 
-  const [reposts, setReposts] = useState<number[]>(() => {
-    const usuarioGuardado = localStorage.getItem("user");
+  const [repostsGuardados, setRepostsGuardados] = useState<RepostGuardado[]>(
+    () => {
+      const usuarioGuardado = localStorage.getItem("user");
 
-    if (!usuarioGuardado) return [];
+      if (!usuarioGuardado) return [];
 
-    const usuario: User = JSON.parse(usuarioGuardado);
-    return obtenerRepostsGuardados(usuario.id);
-  });
+      const usuario: User = JSON.parse(usuarioGuardado);
+      return obtenerRepostsGuardados(usuario.id);
+    },
+  );
+
+  const reposts = repostsGuardados.map((repost) => repost.postId);
 
   const login = (user: User) => {
     setUser(user);
@@ -107,7 +124,7 @@ export function UserProvider({ children }: UserProviderProps) {
     setNombreMostrar(localStorage.getItem(`nombre-${user.id}`) || "");
     setDescripcionPerfil(localStorage.getItem(`descripcion-${user.id}`) || "");
     setSeguidos(obtenerSeguidosGuardados(user.id));
-    setReposts(obtenerRepostsGuardados(user.id));
+    setRepostsGuardados(obtenerRepostsGuardados(user.id));
     localStorage.setItem("user", JSON.stringify(user));
   };
 
@@ -117,7 +134,7 @@ export function UserProvider({ children }: UserProviderProps) {
     setNombreMostrar("");
     setDescripcionPerfil("");
     setSeguidos([]);
-    setReposts([]);
+    setRepostsGuardados([]);
     localStorage.removeItem("user");
   };
 
@@ -204,18 +221,23 @@ export function UserProvider({ children }: UserProviderProps) {
   const repostearPost = (postId: number) => {
     if (!user || reposts.includes(postId)) return;
 
-    const nuevosReposts = [...reposts, postId];
+    const nuevosReposts: RepostGuardado[] = [
+      ...repostsGuardados,
+      { postId, repostedAt: new Date().toISOString() },
+    ];
 
-    setReposts(nuevosReposts);
+    setRepostsGuardados(nuevosReposts);
     localStorage.setItem(`reposts-${user.id}`, JSON.stringify(nuevosReposts));
   };
 
   const quitarRepost = (postId: number) => {
     if (!user) return;
 
-    const nuevosReposts = reposts.filter((id) => id !== postId);
+    const nuevosReposts = repostsGuardados.filter(
+      (repost) => repost.postId !== postId,
+    );
 
-    setReposts(nuevosReposts);
+    setRepostsGuardados(nuevosReposts);
     localStorage.setItem(`reposts-${user.id}`, JSON.stringify(nuevosReposts));
   };
 
@@ -224,6 +246,10 @@ export function UserProvider({ children }: UserProviderProps) {
   };
 
   const obtenerIdsReposteados = (idUsuario: number) => {
+    return obtenerRepostsGuardados(idUsuario).map((repost) => repost.postId);
+  };
+
+  const obtenerRepostsUsuario = (idUsuario: number) => {
     return obtenerRepostsGuardados(idUsuario);
   };
 
@@ -236,7 +262,7 @@ export function UserProvider({ children }: UserProviderProps) {
       if (clave?.startsWith("reposts-")) {
         const idUsuario = Number(clave.replace("reposts-", ""));
 
-        if (obtenerRepostsGuardados(idUsuario).includes(postId)) {
+        if (obtenerIdsReposteados(idUsuario).includes(postId)) {
           cantidad++;
         }
       }
@@ -268,6 +294,7 @@ export function UserProvider({ children }: UserProviderProps) {
         quitarRepost,
         estaReposteando,
         obtenerIdsReposteados,
+        obtenerRepostsUsuario,
         obtenerCantidadReposts,
       }}
     >

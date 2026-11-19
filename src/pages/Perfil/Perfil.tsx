@@ -17,6 +17,7 @@ interface PostConComentarios extends Post {
 
 type PublicacionPerfil = Post & {
   esRepost: boolean;
+  fechaOrden: string;
 };
 
 export default function Perfil() {
@@ -37,7 +38,7 @@ export default function Perfil() {
     repostearPost,
     quitarRepost,
     estaReposteando,
-    obtenerIdsReposteados,
+    obtenerRepostsUsuario,
     obtenerCantidadReposts,
     reposts,
   } = useUser();
@@ -238,29 +239,42 @@ export default function Perfil() {
         );
 
         const dataPosts: Post[] = await responsePosts.json();
-        const idsReposteados = obtenerIdsReposteados(idPerfil!);
-
-        const publicacionesOriginales = dataPosts.filter(
-          (post) => post.UserId === idPerfil,
+        const repostsUsuario = obtenerRepostsUsuario(idPerfil!);
+        const mapaReposts = new Map(
+          repostsUsuario.map((repost) => [repost.postId, repost.repostedAt]),
         );
 
+        const publicacionesOriginales = dataPosts
+          .filter((post) => post.UserId === idPerfil)
+          .map((post) => ({
+            ...post,
+            esRepost: false,
+            fechaOrden: post.createdAt,
+          }));
+
         const publicacionesReposteadas = dataPosts
-          .filter((post) => idsReposteados.includes(post.id))
+          .filter((post) => mapaReposts.has(post.id))
           .map((post) => ({
             ...post,
             esRepost: true,
+            fechaOrden: mapaReposts.get(post.id) || post.createdAt,
           }));
 
         const publicacionesUsuario: PublicacionPerfil[] = [
-          ...publicacionesOriginales.map((post) => ({
-            ...post,
-            esRepost: false,
-          })),
+          ...publicacionesOriginales,
           ...publicacionesReposteadas,
         ];
 
+        const publicacionesOrdenadas = [...publicacionesUsuario].sort(
+          (a, b) =>
+            new Date(b.fechaOrden).getTime() -
+              new Date(a.fechaOrden).getTime() ||
+            b.id - a.id ||
+            Number(a.esRepost) - Number(b.esRepost),
+        );
+
         const postsEnriquecidos = await Promise.all(
-          publicacionesUsuario.map(async (post) => {
+          publicacionesOrdenadas.map(async (post) => {
             let cantidadComentarios = 0;
             let imagenesCargadas: PostImage[] = [];
 
