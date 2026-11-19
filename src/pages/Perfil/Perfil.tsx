@@ -385,13 +385,7 @@ export default function Perfil() {
   return (
     <main className={`container ${styles.contenedorPerfil}`}>
       <section className={styles.tarjetaPerfil}>
-        <div className={styles.portadaPerfil}>
-          <span className={styles.detallePortada}>
-            {esMiPerfil ? "TU ESPACIO" : "PERFIL DE USUARIO"}
-          </span>
-          <span className={styles.decoracionPortada}>✦</span>
-        </div>
-
+        <div className={styles.portadaPerfil} />
         <div className={styles.informacionPerfil}>
           <div className={styles.encabezadoPerfil}>
             <div className={styles.identidadPerfil}>

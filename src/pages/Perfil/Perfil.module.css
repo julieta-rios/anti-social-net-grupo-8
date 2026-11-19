@@ -14,52 +14,9 @@
 }
 
 .portadaPerfil {
-  height: 145px;
-  background: linear-gradient(120deg, #f4b9d0 0%, #d9b9e9 55%, #b9b9ec 100%);
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-  padding: 1.25rem;
-  overflow: hidden;
-}
-
-.portadaPerfil::before,
-.portadaPerfil::after {
-  content: "";
-  position: absolute;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 50%;
-}
-
-.portadaPerfil::before {
-  width: 190px;
-  height: 190px;
-  top: -100px;
-  left: 15%;
-}
-
-.portadaPerfil::after {
-  width: 240px;
-  height: 240px;
-  bottom: -180px;
-  right: 10%;
-}
-
-.detallePortada {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.15rem;
-  z-index: 1;
-}
-
-.decoracionPortada {
-  position: absolute;
-  left: 45%;
-  top: 20px;
-  color: rgba(255, 255, 255, 0.35);
-  font-size: 3rem;
+  height: 115px;
+  background-color: #fff;
+  border-bottom: 1px solid #f0e3ec;
 }
 
 .informacionPerfil {
@@ -78,8 +35,8 @@
 
 .identidadPerfil {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  align-items: flex-end;
+  gap: 0.85rem;
   flex: 1 1 220px;
   min-width: 0;
 }
@@ -99,10 +56,13 @@
 .datosUsuario {
   min-width: 0;
   flex: 1;
+  padding-bottom: 0.35rem;
 }
 
 .datosUsuario h1 {
   font-size: 1.5rem;
+  line-height: 1.2;
+  margin: 0 0 0.15rem;
   overflow-wrap: normal;
   word-break: normal;
   white-space: nowrap;
@@ -113,9 +73,14 @@
 
 .datosUsuario p {
   font-size: 0.9rem;
+  line-height: 1.2;
+  margin: 0;
+  color: #806b80;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/*Botones*/
 .accionesPerfil {
   display: flex;
   flex-wrap: wrap;
@@ -195,7 +160,6 @@
   background-color: #713052;
 }
 
-/*Descripcion y estadisticas*/
 .descripcionPerfil {
   color: #806b80;
   font-size: 0.95rem;
@@ -246,7 +210,6 @@
   color: #913e70;
 }
 
-/*Publicacioes*/
 .seccionPublicaciones {
   margin-top: 2.5rem;
 }
@@ -295,7 +258,6 @@
   transform: translateY(-2px);
 }
 
-/*Estados vacios y carga*/
 .estadoVacio {
   background-color: #fff;
   border: 1px dashed #e6cbdc;
@@ -327,7 +289,6 @@
   font-size: 2.5rem;
 }
 
-/*Modal de editar perfil*/
 .modalOverlay {
   position: fixed;
   inset: 0;
@@ -473,7 +434,6 @@
   filter: brightness(1.08);
 }
 
-/* Modal de seguidores y seguidos */
 .modalLista {
   width: 100%;
   max-width: 430px;
@@ -564,7 +524,6 @@
   color: #913e70;
 }
 
-/* Animacion */
 @keyframes aparecer {
   from {
     opacity: 0;
@@ -576,8 +535,6 @@
     transform: translateY(0);
   }
 }
-
-/* parte responsive */
 
 @media (max-width: 900px) {
   .encabezadoPerfil {
@@ -615,13 +572,7 @@
   }
 
   .portadaPerfil {
-    height: 120px;
-    padding: 1rem;
-  }
-
-  .detallePortada {
-    font-size: 0.65rem;
-    letter-spacing: 0.12rem;
+    height: 95px;
   }
 
   .informacionPerfil {
@@ -637,7 +588,7 @@
 
   .identidadPerfil {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 0.85rem;
     width: 100%;
   }
@@ -649,9 +600,13 @@
     border-width: 4px;
   }
 
+  .datosUsuario {
+    padding-bottom: 0.15rem;
+  }
+
   .datosUsuario h1 {
     font-size: 1.25rem;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.15rem;
   }
 
   .datosUsuario p {
@@ -764,6 +719,10 @@
   .informacionPerfil {
     padding-left: 0.8rem;
     padding-right: 0.8rem;
+  }
+
+  .encabezadoPerfil {
+    margin-top: -38px;
   }
 
   .avatarPerfil {
